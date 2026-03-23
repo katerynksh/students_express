@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/street_food.css">
+    <title>Street Food</title>
+</head>
+
+<body>
+    <button class="btn-primary">
+        <a style="color:#ffffff" href="/">
+            GO BACK
+        </a>
+    </button>
+    <div class="page">
+        <div class="container">
+            <div class="topbar">
+                <div>
+                    <p class="eyebrow">Dashboard</p>
+                    <h1>Street Food</h1>
+                    <p class="subtitle">Manage your food list in one place</p>
+                </div>
+
+                <a href="/street_food/new" class="btn btn-primary">+ Add food</a>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="food-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Food name</th>
+                            <th>Country</th>
+                            <th>Spicy</th>
+                            <th>Price</th>
+                            <th>Rating</th>
+                            <th>Date</th>
+                            <th class="actions-head">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {{#if food}}
+                        {{#each food}}
+                        <tr>
+                            <td class="muted">{{id}}</td>
+                            <td class="food-name">{{food_name}}</td>
+                            <td>{{country}}</td>
+                            <td>{{spicy_level}}</td>
+                            <td>${{price}}</td>
+                            <td>{{rating}}</td>
+                            <td>{{created_at}}</td>
+                            <td>
+                                <div class="row-actions">
+                                    <a href="/street_food/edit/{{id}}" class="btn btn-edit">Edit</a>
+
+                                    <form action="/street_food/delete/{{id}}" method="POST"
+                                        class="inline-form delete-form" data-food-name="{{food_name}}">
+                                        <button type="button" class="btn btn-delete open-delete-modal">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                        {{else}}
+                        <tr>
+                            <td colspan="8" class="empty-state">No food items yet</td>
+                        </tr>
+                        {{/if}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="deleteModal">
+        <div class="modal-card">
+            <div class="modal-icon">!</div>
+
+            <h2 class="modal-title">Delete item?</h2>
+            <p class="modal-text">
+                You are about to delete <strong id="deleteFoodName">this item</strong>. This action cannot be undone.
+            </p>
+
+            <div class="modal-actions">
+                <button type="button" class="btn btn-ghost" id="cancelDelete">Cancel</button>
+                <button type="button" class="btn btn-delete-solid" id="confirmDelete">Yes, delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('deleteModal');
+        const deleteFoodName = document.getElementById('deleteFoodName');
+        const confirmDeleteBtn = document.getElementById('confirmDelete');
+        const cancelDeleteBtn = document.getElementById('cancelDelete');
+        const openDeleteButtons = document.querySelectorAll('.open-delete-modal');
+
+        let currentForm = null;
+
+        openDeleteButtons.forEach((button) => {
+            button.addEventListener('click', function () {
+                currentForm = this.closest('.delete-form');
+                const foodName = currentForm.dataset.foodName || 'this item';
+
+                deleteFoodName.textContent = foodName;
+                modal.classList.add('is-open');
+            });
+        });
+
+        cancelDeleteBtn.addEventListener('click', function () {
+            modal.classList.remove('is-open');
+            currentForm = null;
+        });
+
+        confirmDeleteBtn.addEventListener('click', function () {
+            if (currentForm) {
+                currentForm.submit();
+            }
+        });
+
+        modal.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                modal.classList.remove('is-open');
+                currentForm = null;
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                modal.classList.remove('is-open');
+                currentForm = null;
+            }
+        });
+
+    </script>
+</body>
+
+</html>
