@@ -1,0 +1,38 @@
+<button 
+    style="background-color: rgb(242, 130, 208)">
+    <a style="color:#ffffff" href="/gym">
+        GO BACK
+    </a>
+</button>
+<form method="POST" action="{{action}}">
+    <fieldset>
+        <label>
+            Назва вправи
+            <input name="exercise_name" placeholder="Назва вправи" required />
+        </label>
+        
+        <label>
+            Рівень складності
+            <input name="difficult_level" placeholder="Рівень складності" required />
+        </label>
+        
+        <label>
+            Рівень підготовки
+            <input name="required_level" placeholder="Рівень підготовки" />
+        </label>
+        
+        <label>
+            Група мязів
+            <input name="Muscle_name" placeholder="Цільова група мязів" />
+        </label>
+        <label>
+            Кількість підходів
+            <input name="Sets" placeholder="К-сть підходів" />
+        </label>
+    </fieldset>
+
+    <input
+            type="Submit"
+            value="Додати"
+    />
+</form>

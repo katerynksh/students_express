@@ -136,7 +136,13 @@
           <td>{{this.age_years}}</td>
           <td>{{this.weight_kg}}</td>
           <td>{{this.favorite_food}}</td>
-          <td>{{this.has_microchip}}</td>
+          <td>
+              {{#if this.has_microchip}}
+                 yes
+              {{else}}
+                no
+              {{/if}}
+          </td>  
           <td>{{this.owner_contact}}</td>
           <td>{{this.character_notes}}</td>
           <td>{{this.created_at}}</td>

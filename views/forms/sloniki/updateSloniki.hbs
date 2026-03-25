@@ -1,0 +1,40 @@
+<button  
+    style="background-color: rgb(242, 130, 208)">
+    <a style="color:#ffffff" href="/sloniki">
+        GO BACK
+    </a>
+</button>
+
+
+<h1>Update slonik</h1>
+
+<form method="POST" action="{{action}}">
+  <fieldset>
+    <h3>Autorization</h2>
+    <label>
+        Username
+        <input name="currentUsername" placeholder="Current username" required />
+    </label>
+    <label>
+        Password
+        <input type="password" name="password" placeholder="Current password" required />
+    </label>
+  </fieldset>
+
+  <fieldset>
+    <h3>New data (fill in only fields that you need to update)</h3>
+        <label>
+            Username
+            <input name="newUsername" placeholder="New username" />
+        </label>
+        <label>
+            Age
+            <input type="number" name="newAge" placeholder="New age" />
+        </label>
+        <label>
+            Place of birth
+            <input name="new_place_of_birth" placeholder="New place of birth" />
+        </label>
+  </fieldset>
+  <button type="submit">SAVE</button>
+</form>

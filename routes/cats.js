@@ -16,7 +16,7 @@ router.get("/", async function (req, res, next) {
     res.render("cats", { cats: modCats || [] });
   } catch (err) {
     console.log("Error loading cats:", err);
-    res.status(500).send("Error loading cats list");
+    res.status(503).send("Error loading cats list");
   }
 });
 
@@ -39,7 +39,21 @@ router.post("/add", async (req, res) => {
       character_notes,
     } = req.body;
 
-    const hasMicrochip = microchip === "Yes";
+    let parsedAge;
+    if (age) {
+      parsedAge = parseInt(age);
+    } else {
+      parsedAge = 0;
+    }
+
+    let parsedWeight;
+    if (weight) {
+      parsedWeight = parseFloat(weight);
+    } else {
+      parsedWeight = null;
+    }
+
+    const hasMicrochip = req.body.microchip === 'true';
 
     const query = `
     INSERT INTO cats (name, breed, age_years, weight_kg, favorite_food,  has_microchip, owner_contact, character_notes)
@@ -49,8 +63,8 @@ router.post("/add", async (req, res) => {
     await db.query(query, [
       cat_name || "Unknown",
       breed || "Unknown",
-      age ? parseInt(age) : 0,
-      weight ? parseFloat(weight) : null,
+      parsedAge,  
+      parsedWeight,
       favorite_food,
       hasMicrochip,
       owner_contact,
@@ -60,7 +74,7 @@ router.post("/add", async (req, res) => {
     res.redirect("/cats");
   } catch (err) {
     console.error("DATABASE ERROR:", err.message);
-    res.status(500).send("Database Error: " + err.message);
+    res.status(400).send("Database Error: " + err.message);
   }
 });
 
@@ -72,7 +86,7 @@ router.get("/delete/:id", async (req, res) => {
     res.redirect("/cats");
   } catch (err) {
     console.error("Delete error:", err);
-    res.status(500).send("Could not delete cat");
+    res.status(404).send("Could not delete cat");
   }
 });
 
@@ -82,7 +96,7 @@ router.get("/edit/:id", async (req, res) => {
     const { id } = req.params;
     const result = await db.query("SELECT * FROM cats WHERE id = $1", [id]);
     if (result.rows.length === 0) {
-      return res.status(400).send("Cat not found");
+      return res.status(404).send("Cat not found");
     }
 
     const cat = result.rows[0];
@@ -92,7 +106,7 @@ router.get("/edit/:id", async (req, res) => {
     });
   } catch (err) {
     console.error("Edit form error:", err);
-    res.status(500).send("Error loading edit form");
+    res.status(404).send("Error loading edit form");
   }
 });
 
@@ -103,7 +117,22 @@ router.post("/update/:id", async (req, res) => {
     const {
       cat_name, breed, age, weight, favorite_food, microchip, owner_contact, character_notes
     } = req.body;
-    const hasMicrochip = microchip === 'Yes';
+    
+    let parsedAge;
+    if (age) {
+        parsedAge = parseInt(age);
+    } else {
+        parsedAge = 0;
+    }
+
+    let parsedWeight;
+    if (weight) {
+        parsedWeight = parseFloat(weight);
+    } else {
+        parsedWeight = null;
+    }
+    
+    const hasMicrochip = req.body.microchip === 'true';
     const query = `
     UPDATE cats
     SET name = $1, breed = $2, age_years = $3, weight_kg = $4,  favorite_food = $5,
@@ -112,13 +141,20 @@ router.post("/update/:id", async (req, res) => {
     `;
 
     await db.query(query, [
-      cat_name, breed, parseInt(age), parseFloat(weight), favorite_food,
-      hasMicrochip, owner_contact, character_notes, id
+      cat_name, 
+      breed, 
+      parsedAge, 
+      parsedWeight, 
+      favorite_food,
+      hasMicrochip, 
+      owner_contact, 
+      character_notes, 
+      id
     ]);
     res.redirect("/cats");
   } catch (err) {
     console.error("Update error:", err);
-    res.status(500).send("Error updating cat data");
+    res.status(400).send("Error updating cat data");
   }
 });
 

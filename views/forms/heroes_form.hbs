@@ -1,0 +1,26 @@
+{{#if isEdit}}
+    <form method="POST" action="/heroes/update/{{hero.id}}">
+{{else}}
+    <form method="POST" action="/heroes/add">
+{{/if}}
+    <fieldset>
+        <label>
+            Name
+            <input name="hero_name" value="{{hero.name}}" placeholder="Enter the name of the hero" />
+        </label>
+        <label>
+            Class
+            <input name="hero_class" value="{{hero.hero_class}}" placeholder="what class does the hero have?" />
+        </label>
+        <label>
+            Role
+            <input name="hero_role" value="{{hero.role}}" placeholder="hero's position example exp_roum" />
+        </label>
+        <label>
+            Type of attack
+            <input name="attack_type" value="{{hero.attack_type}}" placeholder="melee or ranged" />
+        </label>
+    </fieldset>
+
+    <input type="submit" value="SAVE" />
+</form>

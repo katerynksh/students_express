@@ -1,33 +1,71 @@
-<button 
-    style="background-color: rgb(242, 130, 208)">
-    <a style="color:#ffffff" href="/">
-        GO BACK
-    </a>
-</button>
+{{#if mode}}
+  <h2>{{pageTitle}}</h2>
+  <form action="{{action}}" method="POST">
+    <div>
+      <label>Name of Gun:</label>
+      <input type="text" name="name_of_gun" value="{{item.name_of_gun}}" aria-required="true">
+    </div>
+    <div>
+      <label>Damage Type:</label>
+      <input type="text" name="damage_type" value="{{item.damage_type}}" aria-required="true">
+    </div>
+    <div>
+      <label>Damage Dealt:</label>
+      <input type="number" name="damage_dealth" value="{{item.damage_dealth}}" step="1" min="1" max="20">
+    </div>
+    <div>
+      <label>Reload Seconds:</label>
+      <input type="number" name="reload_seconds" value="{{item.reload_seconds}}" step="1" min="1" max="14">
+    </div>
+    <div>
+      <label>Additional Info:</label>
+      <textarea name="additional_info">{{item.additional_info}}</textarea>
+    </div>
+    <button type="submit">{{buttonText}}</button>
+    <a style="color:#ff0000" href="/weapons">Cancel</a>
+  </form>
 
-<table>
-    <thead>
-    <tr>
-        <th scope="col">ID</th>
-        <th scope="col">name_of_gun</th>
-        <th scope="col">damage_type</th>
-        <th scope="col">damage_dealth</th>
-        <th scope="col">reload_seconds</th>
-        <th scope="col">additional_info</th>
-        <th scope="col">created_at</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each weapons}}
-        <tr>
-            <th scope="row">{{this.id}}</th>
-            <td>{{this.name_of_gun}}</td>
-            <td>{{this.damage_type}}</td>
-            <td>{{this.damage_dealth}}</td>
-            <td>{{this.reload_seconds}}</td>
-            <td>{{this.additional_info}}</td>
-            <td>{{this.created_at}}</td>
-        </tr>
-    {{/each}}
-    </tbody>
-</table>
+{{else}}
+  <button style="background-color: rgb(111, 0, 255)">
+      <a style="color:#ffffff" href="/">GO BACK</a>
+  </button>
+
+  <table>   
+      <thead>
+      <tr>
+          <th>ID</th>
+          <th>name_of_gun</th>
+          <th>damage_type</th>
+          <th>damage_dealth</th>
+          <th>reload_seconds</th>
+          <th>additional_info</th>
+          <th>Created at</th>
+          <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each weapons}}
+          <tr>
+              <td>{{this.id}}</td>
+              <td>{{this.name_of_gun}}</td>
+              <td>{{this.damage_type}}</td>
+              <td>{{this.damage_dealth}}</td>
+              <td>{{this.reload_seconds}}</td>
+              <td>{{this.additional_info}}</td>
+              <td>{{this.created_at}}</td>
+              <td>
+                  <button style="background-color: #000; padding: 5px 10px;">
+                      <a style="color:#fff; text-decoration: none;" href="/weapons/edit/{{this.id}}">EDIT</a>
+                  </button>
+              </td>
+              <td>
+                  <button style="background-color: #000; padding: 5px 10px;">
+                      <a style="color:#fff; text-decoration: none;" href="/weapons/delete/{{this.id}}">DELETE</a>
+                  </button>
+              </td>
+          </tr>
+      {{/each}}
+      </tbody>
+  </table>
+  <p><a href="/weapons/createGun">ADD GUN</a></p>
+{{/if}}

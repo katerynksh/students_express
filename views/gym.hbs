@@ -1,0 +1,55 @@
+<!--view table of students-->
+<style>
+    .upper{
+        margin-top: 4vh;
+        
+    }
+    .button_back{
+        color:#18db69; 
+        background-color:#778899;  
+        border-radius: 24px; 
+        font-family: Garamond; 
+        font-weight: 600; 
+        font-size: 24px; 
+        width: 10vw; 
+        margin-bottom: 5vh;
+        position: relative;
+        right: 10vw;
+    }
+    .body{
+        background-image: linear-gradient(to bottom right, #38A2D7, #561139); 
+        height:100vh
+    }
+</style>
+<body class="body">
+<div class="upper">
+    <a href="/">
+    <button class="button_back">Назад</button>
+    </a>
+</div>
+</body>      
+<table>
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Назва вправи</th>
+        <th scope="col">Рівень складності</th>
+        <th scope="col">Рівень підготовки</th>
+        <th scope="col">Група мязів</th>
+        <th scope="col">Кількість підходів</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each exercise}}
+        <tr>
+            <th scope="row">{{this.id}}</th>
+            <td>{{this.exercise_name}}</td>
+            <td>{{this.difficult_level}}</td>
+            <td>{{this.required_level}}</td>
+            <td>{{this.Muscle_name}}</td>
+            <td>{{this.Sets}}</td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+  <p><a style="color:rgb(229, 102, 168)" href="/gym/addExercise">Додати вправу</a></p>

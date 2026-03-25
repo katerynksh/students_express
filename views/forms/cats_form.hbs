@@ -71,7 +71,7 @@
         margin-top: 20px;
     }
 
-    input {
+    input, select {
         width: 100%;
         padding: 18px;
         background-color: #1a1c1e;
@@ -84,9 +84,21 @@
         transition: border-color 0.2s ease;
     }
 
-    input:focus {
-        border-color: #ffffff; 
+    input:focus, select:focus {
+        border-color: #fff;
+        outline: none;
     }
+
+    select {
+        cursor: pointer;
+        padding: 8px 12px;
+    }
+
+    select option {
+        background-color: #1a1c1e;
+        color: #fff;
+    }
+    
 
     input[type="submit"] {
         width: 100%;
@@ -128,8 +140,8 @@
     <h1 class="form-title">{{#if isEdit}}EDIT CAT{{else}}CAT REG{{/if}}</h1>
 
     <form method="POST" action="{{#if isEdit}}/cats/update/{{cat.id}}{{else}}/cats/add{{/if}}">
-        <fieldset>
-            <legend>
+        <fieldset style="border:none; padding:0; margin:0;">
+            <legend style="color:#fff; font-weight:800; text-transform:uppercase; border-bottom:2px solid #fff; width:100%; padding-bottom:15px; margin-bottom:30px;">
                 {{#if isEdit}}Update information for {{cat.name}}{{else}}Information about the cat{{/if}}
             </legend>
     <label>
@@ -174,11 +186,10 @@
     </label>
     <label>
         Has Microchip
-        <input
-        name="microchip"
-        placeholder="e.g. No"
-        value="{{#if cat.has_microchip}}Yes{{else}}No{{/if}}"
-        />
+        <select name="microchip", id="microchip">
+        <option value="true" {{#if cat.has_microchip}}selected{{/if}}>yes</option>
+        <option value="false" {{#unless cat.has_microchip}}selected{{/unless}}>no</option>
+        </select>
     </label>
     <label>
         Owner Contact (Phone)
@@ -186,7 +197,6 @@
         name="owner_contact"
         placeholder="+123456789"
         value="{{cat.owner_contact}}"
-        autocomplete="tel"
         />
     </label>
     <label>

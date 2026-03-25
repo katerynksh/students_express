@@ -1,0 +1,38 @@
+  <button 
+    style="background-color: rgb(242, 130, 208)">
+    <a style="color:#ffffff" href="/">
+        GO BACK
+    </a>
+</button>
+
+<table>
+    <thead>
+    <tr>
+       <th scope="col">ID</th>
+        <th scope="col">Ім'я</th>
+        <th scope="col">Клас</th>
+        <th scope="col">Роль</th>
+        <th scope="col">Тип атаки</th>
+        <th scope="col">Дата створення</th>
+    </tr>
+    </thead>
+    <tbody>
+{{#each heroes}}
+        <tr>
+            <td>{{this.id}}</td>
+            <td>{{this.name}}</td>       
+            <td>{{this.hero_class}}</td> 
+            <td>{{this.role}}</td>       
+            <td>{{this.attack_type}}</td>
+            <td>
+                <a href="/heroes/edit/{{this.id}}" class="btn-edit">Edit</a>
+                <a href="/heroes/delete/{{this.id}}" class="btn-delete" onclick="return confirm('Видалити {{this.name}}?')">Delete</a>
+            </td>
+        </tr>
+        {{else}}
+        <tr>
+            <td colspan="6" style="text-align: center;">Героїв не знайдено. Спробуйте додати першого!</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

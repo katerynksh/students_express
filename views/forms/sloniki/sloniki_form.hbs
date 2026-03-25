@@ -1,0 +1,34 @@
+<button 
+    style="background-color: rgb(242, 130, 208)">
+    <a style="color:#ffffff" href="/sloniki">
+        GO BACK
+    </a>
+</button>
+<form method="POST" action="{{action}}">
+    <fieldset>
+        <label>
+            Username
+            <input name="username" placeholder="Enter Username" required />
+        </label>
+        
+        <label>
+            Password
+            <input type="password" name="password" placeholder="Enter Password" required />
+        </label>
+        
+        <label>
+            Age
+            <input type="number" name="age" placeholder="Enter Age" required />
+        </label>
+        
+        <label>
+            Place of birth
+            <input name="place_of_birth" placeholder="Enter Place of birth" required />
+        </label>
+    </fieldset>
+
+    <input
+            type="submit"
+            value="SAVE"
+    />
+</form>
