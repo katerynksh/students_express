@@ -43,13 +43,24 @@ router.post('/', async (req, res) => {
 router.get('/edit/:id', async (req, res) => {
   const carId = req.params.id;
   try {
-    const result = await db.query('SELECT * FROM cars WHERE id = $1', [carId]);
-
-    if (result.rows.length === 0) {
+    const carResult = await db.query('SELECT * FROM cars WHERE id = $1', [carId]);
+    if (carResult.rows.length === 0) {
       return res.status(404).send('Машину не знайдено');
     }
 
-    res.render('edit', { car: result.rows[0] });
+    const allCars = await db.query('SELECT * FROM cars ORDER BY id ASC');
+    const rowCars = allCars.rows.map(s => {
+      return {
+        ...s,
+        created_at_time: s.created_at.toLocaleTimeString(), 
+        created_at_date: s.created_at.toLocaleDateString()
+      }
+    });
+
+    res.render('cars', { 
+      cars: rowCars || [], 
+      editingCar: carResult.rows[0] 
+    });
   } catch (error) {
     console.error('Помилка при завантаженні машини для редагування:', error);
     res.status(500).send('Помилка сервера');
