@@ -81,20 +81,19 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          printf "%s" "${{ secrets.SERVER_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          printf "%s\n" "${{ secrets.SERVER_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          printf "%s" "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+          printf "%s\n" "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
       - name: Deploying to Production
-        env:
-          PORT: ${{ secrets.PORT }}
-          DATABASE_URL: ${{ secrets.DB_URL }}
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
         run: |
           printf "Starting deployment to production server...\n"
 
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=yes ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} \
+            PORT=${{ secrets.PORT }} \
+            SERVER_HOST=${{ secrets.SERVER_HOST }} \
+            'bash -s' << 'EOF'
             set -euo pipefail
             
             printf "Connected to production server as deploy user\n"
@@ -103,14 +102,6 @@ jobs:
             
             printf "Pulling latest changes from prod branch...\n"
             git pull origin prod
-            
-            printf "Updating .env file...\n"
-            cat << 'ENV' > .env
-            PORT=${PORT}
-            DATABASE_URL=${DATABASE_URL}
-            NODE_ENV=production
-            ENV 
-            chmod 600 .env
             
             printf "Installing production dependencies...\n"
             npm ci --only=production
