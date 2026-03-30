@@ -10,7 +10,7 @@
         <label>
             Username
             <input name="username" placeholder="Enter Username" required />
-            {{#if ErrorUsername}}
+            {{#if errorUsername}}
                 <p style="color:#ff0000">{{ErrorUsername}}</p>
              {{/if}}
         </label>
@@ -18,7 +18,7 @@
         <label>
             Password
             <input type="password" name="password" placeholder="Enter Password" required />
-            {{#if ErrorPassword}}
+            {{#if errorPassword}}
                 <p style="color:#ff0000">{{ErrorPassword}}</p>
             {{/if}}
         </label>
@@ -26,7 +26,7 @@
         <label>
             Age
             <input type="number" name="age" placeholder="Enter Age" required />
-            {{#if ErrorAge}}
+            {{#if errorAge}}
                 <p style="color:#ff0000">{{ErrorAge}}</p>
             {{/if}}
         </label>
@@ -34,6 +34,9 @@
         <label>
             Place of birth
             <input name="place_of_birth" placeholder="Enter Place of birth" required />
+            {{#if errorPlaceOfBirth}}
+                <p style="color:#ff0000">{{errorPlaceOfBirth}}</p>
+            {{/if}}
         </label>
     </fieldset>
 

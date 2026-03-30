@@ -89,10 +89,16 @@ export function checkAge(age) {
   }
 }
 
-  export function checkUsername(username) {
-  const hasLetter = /[a-zA-Z]/.test(username); 
+export function checkUsername(username) {
+const hasLetter = /[a-zA-Z]/.test(username); 
 
-    if (!hasLetter) {
-      throw new Error("The username must contain at least one letter");
-    }
+  if (!hasLetter) {
+    throw new Error("The username must contain at least one letter");
   }
+}
+
+export function checkPlaceOfBirth(place_of_birth) {
+if (place_of_birth.length < 2) {
+    throw new Error("The field with place of birth is required, enter at least 2 symbols");
+  }
+}
