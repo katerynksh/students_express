@@ -39,19 +39,6 @@ router.post("/add", async (req, res) => {
       character_notes,
     } = req.body;
 
-    let parsedAge;
-    if (age) {
-      parsedAge = parseInt(age);
-    } else {
-      parsedAge = 0;
-    }
-
-    let parsedWeight;
-    if (weight) {
-      parsedWeight = parseFloat(weight);
-    } else {
-      parsedWeight = null;
-    }
 
     const hasMicrochip = req.body.microchip === 'true';
 
@@ -63,8 +50,8 @@ router.post("/add", async (req, res) => {
     await db.query(query, [
       cat_name || "Unknown",
       breed || "Unknown",
-      parsedAge,  
-      parsedWeight,
+      age ? parseInt(age) : 0,
+      weight ? parseFloat(weight) : null,,
       favorite_food,
       hasMicrochip,
       owner_contact,
@@ -118,20 +105,6 @@ router.post("/update/:id", async (req, res) => {
       cat_name, breed, age, weight, favorite_food, microchip, owner_contact, character_notes
     } = req.body;
     
-    let parsedAge;
-    if (age) {
-        parsedAge = parseInt(age);
-    } else {
-        parsedAge = 0;
-    }
-
-    let parsedWeight;
-    if (weight) {
-        parsedWeight = parseFloat(weight);
-    } else {
-        parsedWeight = null;
-    }
-    
     const hasMicrochip = req.body.microchip === 'true';
     const query = `
     UPDATE cats
@@ -143,8 +116,8 @@ router.post("/update/:id", async (req, res) => {
     await db.query(query, [
       cat_name, 
       breed, 
-      parsedAge, 
-      parsedWeight, 
+      age ? parseInt(age) : 0,
+      weight ? parseFloat(weight) : null,
       favorite_food,
       hasMicrochip, 
       owner_contact, 
