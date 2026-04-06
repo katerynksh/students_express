@@ -22,6 +22,7 @@ import heroessRouter from './routes/heroes.js'
 import presidentRouter from './routes/president.js'
 import productRouter from './routes/product.js'
 import barRouter from './routes/bar.js'
+import accountsRouter from './routes/accounts.js'
 
 import { fileURLToPath } from 'url';
 
@@ -55,6 +56,7 @@ app.use('/dhd', dhdRouter);
 app.use('/street_food', streetFoodRouter);
 app.use('/product', productRouter);
 app.use('/bar', barRouter);
+app.use('/accounts', accountsRouter);
 
 app.use((err, req, res, next) => {
   console.error('Global error caught:', err || 'Unknown error');
