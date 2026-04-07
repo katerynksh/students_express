@@ -1,0 +1,256 @@
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #000000;
+    font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+    overflow: hidden;
+  }
+
+  .app-container {
+    display: flex;
+    height: 100vh;
+    border: 2px solid #000;
+    box-sizing: border-box;
+  }
+
+  .sidebar {
+    width: 280px;
+    border-right: 2px solid #000;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+  }
+
+  .logo-section {
+    padding: 20px;
+    border-bottom: 2px solid #000;
+    position: relative;
+  }
+
+  .logo-section::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    border-radius: 50%;
+  }
+
+  .logo-text {
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 0.85;
+    text-transform: uppercase;
+    letter-spacing: -3px;
+    margin: 15px 0 0 0;
+    color: #000;
+  }
+
+  .logo-dot {
+    color: #fff;
+    text-shadow: 1px 1px 0 #000, -1px -1px 0 #000;
+  }
+
+  .nav-menu {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;               
+    justify-content: flex-start; 
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+    border-radius: 50px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 13px;
+    transition: all 0.2s ease;
+  }
+
+  .nav-item:hover, .nav-item.active {
+    background-color: #000000;
+    color: #ffffff;
+  }
+
+  .main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top-header {
+    height: 60px;
+    border-bottom: 2px solid #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+  }
+
+  .header-title {
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 16px;
+  }
+
+  .content-scroll {
+    padding: 30px;
+    overflow-y: auto;
+  }
+
+  h2 {
+    font-weight: 900;         
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    color: #000000; 
+    opacity: 1;     
+  }
+
+  .cats-table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 2px solid #000;
+  }
+
+  .cats-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+  }
+
+  .cats-table th {
+    background: #000;
+    color: #fff;
+    padding: 12px;
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+
+  .cats-table td {
+    padding: 12px;
+    border: 1px solid #000;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+
+  .owner-tag {
+    background: #eee;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+  }
+
+  .logout-area {
+    padding: 20px; 
+    border-top: 2px solid #000;
+    margin-top: auto; 
+  }
+
+  .logout-style:hover {
+    background-color: #000000;
+    color: #fff;
+    border-color: #a8a2a2;
+  }
+
+  .avatar-circle {
+    width: 35px;
+    height: 35px;
+    background-color: #000;
+    border-radius: 50%;
+    flex-shrink: 0; 
+  }
+
+  .user-badge {
+    display: flex;          
+    align-items: center;    
+    gap: 10px;              
+  }
+
+  .user-handle {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+
+</style>
+
+<div class="app-container">
+  <aside class="sidebar">
+  <div class="logo-section">
+    <h1 class="logo-text">CAT<br>NET<span class="logo-dot">.</span></h1>
+  </div>
+
+<nav class="nav-menu">
+    <a href="/cats/profile?user={{username}}" class="nav-item">MY CATS</a>
+    <a href="/cats/all?user={{username}}" class="nav-item active">ALL CATS</a>
+</nav>
+
+  <div class="logout-area">
+    <a href="/cats/logout" class="nav-item logout-style">LOGOUT</a>
+  </div>
+</aside>
+
+  <main class="main-content">
+    <header class="top-header">
+      <div class="header-title">MEOW</div>
+  
+      <div class="user-badge">
+        <span class="user-handle">{{username}}</span>
+        <div class="avatar-circle"></div>
+      </div>
+    </header>
+
+    <section class="content-scroll">
+      <h2>All cats:</h2>
+      
+      <div class="cats-table-container">
+        <table class="cats-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Breed</th>
+              <th>Age</th>
+              <th>Weight</th>
+              <th>Food</th>
+              <th>Owner</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each cats}}
+            <tr>
+              <td>{{this.name}}</td>
+              <td>{{this.breed}}</td>
+              <td>{{this.age_years}} Y</td>
+              <td>{{this.weight_kg}} kg</td>
+              <td>{{this.favorite_food}}</td>
+              <td><span class="owner-tag">@{{this.owner_name}}</span></td>
+              <td style="font-size: 10px; max-width: 250px;">{{this.character_notes}}</td>
+            </tr>
+            {{else}}
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 40px; opacity: 0.5;">NO ONE HAS ADDED THE CATS YET.</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>

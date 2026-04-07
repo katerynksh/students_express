@@ -1,0 +1,149 @@
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #050505; 
+    color: #FFFFFF;
+    font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+    overflow: hidden;
+  }
+
+  .viewport {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;    
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background-color: #050505;
+  }
+
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 20px;
+    position: relative; 
+  }
+
+  .logo-placeholder {
+    width: 40px;
+    height: 40px;
+    background-color: #FFFFFF;
+    border-radius: 50%; 
+    position: absolute; 
+    left: -40px;       
+    top: -10px;        
+    }
+
+  .main-title {
+    font-size: clamp(100px, 15vw, 180px); 
+    font-weight: 900;
+    line-height: 0.85;
+    letter-spacing: -5px;
+    margin: 0;
+    text-transform: uppercase;
+    text-align: left; 
+  }
+
+  .dot { 
+    color: #FFFFFF; 
+  }
+
+  .footer-text {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%); 
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: #444;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .btn-main {
+    position: absolute;
+    top: 10px;
+    left: -15px;
+    z-index: 100;
+    padding: 10px 20px;   
+    font-size: 17px;       
+
+    display: inline-block;
+    padding: 14px 28px;
+    background-color: #ffffff; 
+    color: #000000;            
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 2px;
+    border-radius: 50px;       
+    transition: all 0.3s ease;
+    border: 2px solid #ffffff; 
+    cursor: pointer;
+    font-family: inherit; 
+  }
+
+  .btn-main:hover {
+    background-color: #000000; 
+    color: #ffffff;            
+    border-color: #ffffff;     
+    transform: translateY(-3px) scale(1.05); 
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1); 
+  }
+
+  .btn-main:active {
+    transform: translateY(-1px) scale(1);
+  }
+
+  .btn-right {
+    left: auto; 
+    right: 65px;           
+  }
+
+  .btn-right-manual {
+  left: auto; 
+  right: 65px;
+  top: 120px; 
+  width: 220px;  
+  text-align: center;
+  position: absolute;
+  z-index: 1000;
+  margin: 0; 
+}
+
+.btn-right-manual {
+  left: auto; 
+  right: 65px; 
+  top: 85px;  
+  width: 220px; 
+  text-align: center;
+  position: absolute;
+  z-index: 1000;
+  margin: 0; 
+}
+</style>
+
+<div class="viewport">
+  <a href="/" class="btn-main">← Back</a>
+
+  <a href="/cats/register" class="btn-main btn-right" style="right: 210px;">Reg</a>
+
+  <a href="/cats/login" class="btn-main btn-right">Login</a>
+
+  <a href="/cats/view-public" class="btn-main btn-right-manual">View All Cats</a>
+
+  <div class="content-wrapper">
+    <div class="logo-placeholder"></div>
+    
+    <h1 class="main-title">
+      CAT<br>
+      NET<span class="dot">.</span>
+    </h1>
+  </div>
+
+  <p class="footer-text">YOUR DAILY DOSE OF FLOOF.</p>
+</div>

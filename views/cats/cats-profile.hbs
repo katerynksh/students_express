@@ -1,0 +1,493 @@
+<style>
+  body,
+  html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #000000;
+    font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+    overflow: hidden;
+  }
+
+  .app-container {
+    display: flex;
+    height: 100vh;
+    border: 2px solid #000;
+    box-sizing: border-box;
+  }
+
+  .sidebar {
+    width: 280px;
+    border-right: 2px solid #000;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    position: relative;
+  }
+
+  .logo-section {
+    padding: 20px;
+    border-bottom: 2px solid #000;
+    position: relative;
+  }
+
+  .logo-section::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    border-radius: 50%;
+  }
+
+  .logo-text {
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 0.85;
+    text-transform: uppercase;
+    letter-spacing: -3px;
+    margin: 15px 0 0 0;
+    color: #000;
+  }
+
+  .logo-dot {
+    color: #fff;
+    text-shadow:
+      1px 1px 0 #000,
+      -1px -1px 0 #000;
+  }
+
+  .nav-menu {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: flex-start;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+    border-radius: 50px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 13px;
+    transition: all 0.2s ease;
+  }
+
+  .nav-item:hover,
+  .nav-item.active {
+    background-color: #000000;
+    color: #ffffff;
+  }
+
+  .main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+  }
+
+  .top-header {
+    height: 60px;
+    border-bottom: 2px solid #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+  }
+
+  .header-title {
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 16px;
+  }
+
+  .user-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .user-handle {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+
+  .avatar-circle {
+    width: 35px;
+    height: 35px;
+    background-color: #000;
+    border-radius: 50%;
+    position: relative;
+  }
+
+  .avatar-circle::before {
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 800;
+    font-size: 12px;
+  }
+
+  .content-scroll {
+    padding: 30px;
+    overflow-y: auto;
+  }
+
+  h1,
+  h2,
+  p {
+    color: #000;
+    text-transform: uppercase;
+    margin: 0 0 10px 0;
+  }
+
+  .logout-area {
+    padding: 20px;
+    border-top: 2px solid #000;
+    margin-top: auto;
+  }
+
+  .logout-style:hover {
+    background-color: #000000;
+    color: #fff;
+    border-color: #a8a2a2;
+  }
+
+  .btn-terminate {
+    color: #000;
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+  }
+
+  .btn-terminate:hover {
+    opacity: 1;
+    color: #ff0000;
+  }
+
+  .cats-table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+    border: 2px solid #000;
+  }
+
+  .cats-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1000px;
+  }
+
+  .cats-table th {
+    background: #000;
+    color: #fff;
+    padding: 12px;
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .cats-table td {
+    padding: 10px;
+    border: 1px solid #000;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+
+  .btn-action {
+    background: #fff;
+    color: #000;
+    border: 2px solid #000;
+    padding: 4px 8px;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 10px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .btn-action:hover {
+    background: #000;
+    color: #fff;
+  }
+
+  .modal-content {
+    background: #fff;
+    border: 3px solid #000;
+    width: 380px;
+    margin: 50px auto;
+    padding: 20px;
+    position: relative;
+    box-shadow: 10px 10px 0px #000;
+    box-sizing: border-box;
+  }
+
+  .modal-content input,
+  .modal-content textarea,
+  .modal-content select {
+    width: 100%;
+    border: 2px solid #000;
+    padding: 8px;
+    margin-bottom: 8px;
+    font-weight: 800;
+    box-sizing: border-box;
+    font-family: inherit;
+  }
+
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-weight: 800;
+    font-size: 12px;
+  }
+
+  .checkbox-group input {
+    width: auto;
+    margin: 0;
+  }
+
+  .btn-edit {
+    background-color: #fff;
+    color: #000;
+    border: 2px solid #000;
+  }
+
+  .btn-edit:hover {
+    background-color: #000;
+    color: #fff;
+  }
+
+  .btn-del {
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #000;
+  }
+
+  .btn-del:hover {
+    background-color: #fff;
+    color: #000;
+  }
+
+  .btn-action-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+  }
+
+  .btn-style {
+    appearance: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 80px;
+    height: 35px;
+
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #000;
+
+    font-family: inherit;
+    font-weight: 900;
+    font-size: 11px;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+
+    transition:
+      background 0.2s,
+      color 0.2s;
+    box-sizing: border-box;
+  }
+
+  .btn-style:hover {
+    background-color: #fff;
+    color: #000;
+    border: 2px solid #000;
+  }
+</style>
+
+<div class="app-container">
+  <aside class="sidebar">
+    <div class="logo-section">
+      <h1 class="logo-text">CAT<br />NET<span class="logo-dot">.</span></h1>
+    </div>
+    <nav class="nav-menu">
+      <a href="/cats/profile?user={{username}}" class="nav-item active">MY CATS</a>
+
+      <a href="/cats/all?user={{username}}" class="nav-item">ALL CATS</a>
+    </nav>
+    <div class="logout-area">
+      <a href="/cats/logout" class="nav-item logout-style">
+        LOGOUT
+      </a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-header">
+      <div class="header-title">MEOW</div>
+      <div class="user-badge">
+        <span class="user-handle">{{username}}</span>
+        <div class="avatar-circle"></div>
+      </div>
+    </header>
+
+    <section class="content-scroll">
+      <h2 style="font-weight:900;">Welcome, {{username}}!</h2>
+
+     <a 
+  href="/cats/add-form?user={{username}}" 
+  class="nav-item" 
+  style="width: 220px; margin-top: 15px; text-decoration: none;"
+>
+  + REGISTER NEW CAT
+</a>
+
+      <div class="cats-table-container">
+        <table class="cats-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Breed</th>
+              <th>Age (Y)</th>
+              <th>Weight (KG)</th>
+              <th>Food</th>
+              <th>Chip</th>
+              <th>Contact</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each cats}}
+              <tr>
+                <td style="font-size: 10px; opacity: 0.6;">{{this.id}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.breed}}</td>
+                <td>{{this.age_years}}</td>
+                <td>{{this.weight_kg}}</td>
+                <td>{{this.favorite_food}}</td>
+                <td>{{#if this.has_microchip}}YES{{else}}NO{{/if}}</td>
+                <td style="font-size: 10px;">{{this.owner_contact}}</td>
+                <td
+                  style="font-size: 10px; max-width: 150px;"
+                >{{this.character_notes}}</td>
+                <td>
+                <div class="btn-action-group">
+                  <a href="/cats/edit-form/{{this.id}}?user={{../username}}" class="btn-style">EDIT</a>
+                  
+                  <button type="button" class="btn-style" onclick="openConfirm('{{this.id}}')">DEL</button>
+                </div>
+              </td>
+              </tr>
+            {{else}}
+              <tr>
+                <td
+                  colspan="10"
+                  style="text-align: center; padding: 40px; opacity: 0.5;"
+                >NO ONE HAS ADDED THE CATS YET.</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<dialog id="confirmDialog" 
+        style="border: 3px solid #000; 
+               padding: 20px; 
+               box-shadow: 10px 10px 0px #000; 
+               background: #fff;
+               width: 320px; 
+               outline: none;
+               position: fixed;
+               top: 50%;
+               left: 50%;
+               transform: translate(-50%, -50%);
+               margin: 0;">
+
+    <div style="text-align: center;">
+        <p style="font-weight: 900; 
+                  text-transform: uppercase; 
+                  font-size: 13px; 
+                  margin-bottom: 20px; 
+                  letter-spacing: 0.5px;">
+            Are you sure you want to delete?
+        </p>
+
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            
+            <form id="deleteForm" method="POST" action="/cats/delete" style="margin: 0;">
+                <input type="hidden" name="cat_id" id="catToDelete">
+                <input type="hidden" name="username" value="{{username}}">
+                
+                <button type="submit" 
+                        class="btn-style" 
+                        style="width: 80px; height: 35px; background: #000; color: #fff; cursor: pointer; border: 2px solid #000;">
+                    YES
+                </button>
+            </form>
+
+            <button onclick="document.getElementById('confirmDialog').close()" 
+                    class="btn-style" 
+                    style="width: 80px; height: 35px; background: #fff; color: #000; cursor: pointer; border: 2px solid #000;">
+                NO
+            </button>
+        </div>
+    </div>
+</dialog>
+
+<style>
+  dialog::backdrop {
+    background: rgba(0, 0, 0, 0.2); 
+  }
+
+  dialog {
+    display: none;
+  }
+  dialog[open] {
+    display: block;
+  }
+</style>
+
+<script>
+  function openConfirm(id) {
+    const modal = document.getElementById('confirmDialog');
+    document.getElementById('catToDelete').value = id;
+    
+    modal.showModal();
+  }
+</script>

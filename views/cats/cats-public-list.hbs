@@ -1,0 +1,170 @@
+<style>
+  body,
+  html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #000000;
+    color: #ffffff;
+    font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden; 
+  }
+
+  .container {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+
+.btn-back {
+  position: absolute;
+  top: 35px;
+  left: 35px;
+  z-index: 100;
+
+  display: inline-block;
+  padding: 14px 28px;
+  width: auto;
+  min-width: 120px;
+  
+  background-color: #ffffff;
+  color: #000000;
+  
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: 2px;
+  
+  border: 2px solid #ffffff;
+  border-radius: 50px;
+  
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.btn-back:hover {
+  background-color: #000000;
+  color: #ffffff;
+  border-color: #ffffff;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+}
+
+  .page-title {
+    font-size: 80px; 
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -5px;
+    margin: 60px 0 40px 0;
+    text-align: center;
+    line-height: 0.9;
+  }
+
+  .table-wrapper {
+    width: 95%; 
+    max-width: 1600px;
+    margin-bottom: 50px;
+  }
+
+  .public-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #111111; 
+    border: 3px solid #ffffff;
+    box-shadow: 20px 20px 0px rgba(255, 255, 255, 0.1);
+  }
+
+  .public-table th {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 20px;
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+
+  .public-table td {
+    padding: 20px;
+    border-bottom: 1px solid #333;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 16px;
+    color: #eeeeee;
+  }
+
+  .public-table tr:hover {
+    background-color: #1a1a1a;
+  }
+
+  .owner-badge {
+    background: #ffffff;
+    color: #000000;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 900;
+    border-radius: 4px;
+  }
+
+  .footer-text {
+    opacity: 0.3;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: auto;
+    padding-bottom: 20px;
+  }
+</style>
+
+<div class="container">
+  <a href="/cats" class="btn-back">← BACK</a>
+
+  <h1 class="page-title">PUBLIC<br />CAT LIST</h1>
+
+  <div class="table-wrapper">
+    <table class="public-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Breed</th>
+          <th>Age</th>
+          <th>Weight</th>
+          <th>Food</th>
+          <th>Owner</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each cats}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.breed}}</td>
+            <td>{{this.age_years}} Y</td>
+            <td>{{this.weight_kg}} kg</td>
+            <td>{{this.favorite_food}}</td>
+            <td><span class="owner-tag">@{{this.owner_name}}</span></td>
+            <td
+              style="font-size: 10px; max-width: 250px;"
+            >{{this.character_notes}}</td>
+          </tr>
+        {{else}}
+          <tr>
+            <td
+              colspan="6"
+              style="text-align: center; padding: 100px; opacity: 0.5;"
+            >
+              THE DATABASE IS CURRENTLY EMPTY.
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>

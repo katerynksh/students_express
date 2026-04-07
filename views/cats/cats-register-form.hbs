@@ -1,0 +1,332 @@
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, rgb(0, 0, 0) 50%, rgb(254, 254, 254) 50%);    
+    font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+    overflow: hidden;
+  }
+
+  .viewport {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: flex-start;    
+    width: 50vw;
+    height: 100vh;
+    position: relative;
+    padding-left: 40px; 
+    box-sizing: border-box; 
+    }
+
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    padding-left: 0;
+    position: relative; 
+  }
+
+  .logo-placeholder {
+    width: 40px;
+    height: 40px;
+    background-color: #FFFFFF;
+    border-radius: 50%; 
+    margin-bottom: 0;
+    margin-left: -35px;
+    margin-top: -20px;
+  }
+
+  .main-title {
+    font-size: clamp(100px, 15vw, 180px); 
+    font-weight: 900;
+    line-height: 0.85;
+    letter-spacing: -5px;
+    margin: 0;
+    text-transform: uppercase;
+    text-align: left; 
+  }
+
+  .dot { 
+    color: #FFFFFF; 
+  }
+
+  .btn-main {
+    position: absolute;
+    top: 10px;
+    left: -15px;
+    z-index: 100;
+    padding: 10px 20px;    
+    font-size: 17px;       
+
+    display: inline-block;
+    padding: 14px 28px;
+    background-color: #ffffff; 
+    color: #000000;            
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 2px;
+    border-radius: 50px;       
+    transition: all 0.3s ease;
+    border: 2px solid #ffffff; 
+    cursor: pointer;
+    font-family: inherit; 
+  }
+
+  .btn-main:hover {
+    background-color: #000000; 
+    color: #ffffff;            
+    border-color: #ffffff;     
+    transform: translateY(-3px) scale(1.05); 
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1); 
+  }
+
+
+  .auth-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50vw; 
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .login-box {
+    width: 100%;
+    max-width: 350px;
+    padding: 0px 20px;
+  }
+
+  .login-box h2 {
+    font-size: 24px;
+    font-weight: 900;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    color: #000;
+  }
+
+  .login-box p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+
+  .input-group {
+    margin-bottom: 6px;
+  }
+
+  .input-group label {
+    display: block;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+    color: #000;
+    text-transform: uppercase;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #000;
+    background: transparent;
+    font-family: inherit;
+    font-size: 16px;
+    box-sizing: border-box;
+    outline: none;
+  }
+
+  .auth-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50vw; 
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-items: flex-start; 
+    box-sizing: border-box;
+  }
+
+  .login-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+  }
+
+  .login-box h2 {
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    color: #000;
+  }
+
+  .login-box p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 18px;
+    border: 2px solid #000; 
+    background-color: transparent; 
+    
+    color: #000000; 
+    
+    font-family: inherit;
+    font-size: 16px;
+    box-sizing: border-box;
+    outline: none;
+  }
+
+  .input-group input::placeholder {
+    color: #aaa;
+    font-weight: 400;
+  }
+
+  .btn-login {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    width: 100%; 
+    padding: 16px 30px;
+    
+    background-color: #000000; 
+    color: #ffffff;            
+    border: 2px solid #000000; 
+    border-radius: 50px;       
+    
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 2px;
+    font-size: 16px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+  }
+
+  .btn-login:hover {
+    background-color: #ffffff; 
+    color: #000000;           
+    border-color: #000000;     
+    
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-login:active {
+    transform: translateY(-1px);
+  }
+
+  .btn-login span {
+    font-size: 18px;
+    transition: transform 0.3s ease;
+  }
+
+  .btn-login:hover span {
+    transform: translateX(5px); 
+  }
+
+  .signup-section {
+    margin-top: 15px; 
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    display: flex; 
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; 
+  }
+
+  .signup-text {
+    font-size: 13px;
+    color: #888;
+    margin: 0; 
+    line-height: 1; 
+    margin-top: 7px;
+  }
+
+  .btn-signup {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #ffffff; 
+    color: #000000;            
+    border: 2px solid #000000; 
+    border-radius: 50px;       
+    
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 2px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .btn-signup:hover {
+    background-color: #000000; 
+    color: #ffffff;            
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+</style>
+
+<div class="viewport">
+  <a href="/cats" class="btn-main">← Back</a>
+
+  <div class="content-wrapper">
+    <div class="logo-placeholder"></div>
+    
+    <h1 class="main-title">
+      CAT<br>
+      NET<span class="dot">.</span>
+    </h1>
+  </div>
+</div>
+
+<div class="auth-panel">
+  <div class="login-box">
+    <h2>Create Account</h2>
+    <form action="/cats/register" method="POST">
+      <div class="input-group">
+        <label>User name</label>
+        <input type="text" name="username" placeholder="CatLover99" required>
+      </div>
+
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="owner@catnet.io" required>
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="••••••••" required>
+      </div>
+
+      <div class="input-group">
+        <label>Confirm Password</label>
+        <input type="password" name="confirmPassword" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn-login" style="text-decoration: none;">
+        Register <span>→</span>
+      </button>
+    </form>
+    <div class="signup-section">
+    <p class="signup-text">Already have an account?</p>
+    <a href="/cats/login" class="btn-signup">Login</a>
+    </div>
+  </div>
+</div>

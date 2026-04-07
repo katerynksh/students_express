@@ -111,6 +111,36 @@ createTableQueries.push(`
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
+createTableQueries.push(`
+    CREATE TABLE IF NOT EXISTS users_cats (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(50) NOT NULL,           
+        email VARCHAR(255) UNIQUE NOT NULL,      
+        password VARCHAR(255) NOT NULL,          
+        created_at TIMESTAMP DEFAULT NOW(),     
+        is_active BOOLEAN DEFAULT TRUE          
+    );
+      `);
+createTableQueries.push(`
+    CREATE TABLE IF NOT EXISTS cats (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        breed VARCHAR(100),
+        age_years INTEGER,
+        weight_kg DECIMAL(5, 2),
+        favorite_food VARCHAR(255),
+        has_microchip BOOLEAN DEFAULT FALSE,
+        owner_contact VARCHAR(255),
+        character_notes TEXT,
+        created_at TIMESTAMP DEFAULT NOW(),
+            
+        user_id INTEGER NOT NULL,
+        CONSTRAINT fk_user_cats
+            FOREIGN KEY (user_id) 
+            REFERENCES users_cats(id) 
+            ON DELETE CASCADE
+    );
+`);
 for await (const query of createTableQueries) {
     try {
         console.log(query.slice(0, query.indexOf('(')).trim() + "...")
