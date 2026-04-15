@@ -2,8 +2,17 @@ import express from 'express';
 import db from '../db/connector.js';
 import { getNames } from 'country-list';
 import bcrypt from 'bcrypt';
+import session from 'express-session';
 
 const router = express.Router();
+
+router.use(
+  session({
+    secret: 'street-food-secret',
+    resave: false,
+    saveUninitialized: false
+  })
+);
 const SALT_ROUNDS = 10;
 
 const countries = getNames().sort((a, b) => a.localeCompare(b));
@@ -203,11 +212,13 @@ function formatFoodData(rows) {
   });
 }
 
+// ... (верх файлу НЕ міняємо)
+
 router.get('/index', async (req, res, next) => {
   try {
     const result = await db.query('SELECT * FROM street_food ORDER BY id ASC');
 
-    res.render('street_food/street_food_index', {
+    res.render('forms/street_food/street_food_index', {
       title: 'Street Food Preview',
       food: formatFoodData(result.rows),
       user: req.session?.user || null
@@ -217,12 +228,13 @@ router.get('/index', async (req, res, next) => {
   }
 });
 
+// LOGIN
 router.get('/login', (req, res) => {
   if (req.session?.user) {
     return res.redirect('/street_food');
   }
 
-  res.render('street_food/street_food_login', {
+  res.render('forms/street_food/street_food_login', {
     title: 'Street Food Login',
     item: {},
     fieldErrors: {}
@@ -234,7 +246,7 @@ router.post('/login', async (req, res, next) => {
     const { fieldErrors, sanitizedData } = validateLoginForm(req.body);
 
     if (Object.keys(fieldErrors).length > 0) {
-      return res.status(400).render('street_food/street_food_login', {
+      return res.status(400).render('forms/street_food/street_food_login', {
         title: 'Street Food Login',
         item: req.body,
         fieldErrors
@@ -242,24 +254,17 @@ router.post('/login', async (req, res, next) => {
     }
 
     const result = await db.query(
-      `
-      SELECT *
-      FROM street_food_users
-      WHERE username = $1 OR email = $1
-      LIMIT 1
-      `,
+      `SELECT * FROM street_food_users WHERE username = $1 OR email = $1 LIMIT 1`,
       [sanitizedData.login]
     );
 
     const user = result.rows[0];
 
     if (!user) {
-      return res.status(400).render('street_food/street_food_login', {
+      return res.status(400).render('forms/street_food/street_food_login', {
         title: 'Street Food Login',
         item: req.body,
-        fieldErrors: {
-          login: 'Користувача не знайдено'
-        }
+        fieldErrors: { login: 'Користувача не знайдено' }
       });
     }
 
@@ -269,19 +274,18 @@ router.post('/login', async (req, res, next) => {
     );
 
     if (!isPasswordValid) {
-      return res.status(400).render('street_food/street_food_login', {
+      return res.status(400).render('forms/street_food/street_food_login', {
         title: 'Street Food Login',
         item: req.body,
-        fieldErrors: {
-          password: 'Невірний пароль'
-        }
+        fieldErrors: { password: 'Невірний пароль' }
       });
     }
 
     req.session.user = {
       id: user.id,
       username: user.username,
-      email: user.email
+      email: user.email,
+      role: user.role
     };
 
     res.redirect('/street_food');
@@ -290,12 +294,13 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
+// REGISTER
 router.get('/register', (req, res) => {
   if (req.session?.user) {
     return res.redirect('/street_food');
   }
 
-  res.render('street_food/street_food_register', {
+  res.render('forms/street_food/street_food_register', {
     title: 'Street Food Register',
     item: {},
     fieldErrors: {}
@@ -307,7 +312,7 @@ router.post('/register', async (req, res, next) => {
     const { fieldErrors, sanitizedData } = validateRegisterForm(req.body);
 
     if (Object.keys(fieldErrors).length > 0) {
-      return res.status(400).render('street_food/street_food_register', {
+      return res.status(400).render('forms/street_food/street_food_register', {
         title: 'Street Food Register',
         item: req.body,
         fieldErrors
@@ -315,17 +320,12 @@ router.post('/register', async (req, res, next) => {
     }
 
     const existingUser = await db.query(
-      `
-      SELECT id
-      FROM street_food_users
-      WHERE username = $1 OR email = $2
-      LIMIT 1
-      `,
+      `SELECT id FROM street_food_users WHERE username = $1 OR email = $2 LIMIT 1`,
       [sanitizedData.username, sanitizedData.email]
     );
 
     if (existingUser.rows.length > 0) {
-      return res.status(400).render('street_food/street_food_register', {
+      return res.status(400).render('forms/street_food/street_food_register', {
         title: 'Street Food Register',
         item: req.body,
         fieldErrors: {
@@ -340,15 +340,18 @@ router.post('/register', async (req, res, next) => {
     );
 
     const createdUser = await db.query(
-      `
-      INSERT INTO street_food_users (username, email, password_hash)
-      VALUES ($1, $2, $3)
-      RETURNING id, username, email
-      `,
+      `INSERT INTO street_food_users (username, email, password_hash)
+   VALUES ($1, $2, $3)
+   RETURNING id, username, email, role`,
       [sanitizedData.username, sanitizedData.email, passwordHash]
     );
 
-    req.session.user = createdUser.rows[0];
+    req.session.user = {
+      id: createdUser.rows[0].id,
+      username: createdUser.rows[0].username,
+      email: createdUser.rows[0].email,
+      role: createdUser.rows[0].role
+    };
 
     res.redirect('/street_food');
   } catch (err) {
@@ -356,27 +359,30 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
+// LOGOUT
 router.post('/logout', requireAuth, (req, res) => {
   req.session.destroy(() => {
     res.redirect('/street_food/index');
   });
 });
 
+// PRIVATE LIST
 router.get('/', requireAuth, async (req, res, next) => {
   try {
-    const userId = req.session.user.id;
+    let result;
 
-    const result = await db.query(
-      `
-      SELECT *
-      FROM street_food
-      WHERE user_id = $1
-      ORDER BY id ASC
-      `,
-      [userId]
-    );
+    if (req.session.user?.role === 'admin') {
+      result = await db.query(
+        `SELECT * FROM street_food ORDER BY id ASC`
+      );
+    } else {
+      result = await db.query(
+        `SELECT * FROM street_food WHERE user_id = $1 ORDER BY id ASC`,
+        [req.session.user.id]
+      );
+    }
 
-    res.render('street_food/street_food', {
+    res.render('forms/street_food/street_food', {
       title: 'Street Food',
       isForm: false,
       food: formatFoodData(result.rows),
@@ -387,9 +393,10 @@ router.get('/', requireAuth, async (req, res, next) => {
   }
 });
 
+// NEW
 router.get('/new', requireAuth, (req, res) => {
   res.render(
-    'street_food/street_food',
+    'forms/street_food/street_food',
     buildFormView({
       title: 'Add food',
       pageTitle: 'Add new food',
@@ -399,13 +406,14 @@ router.get('/new', requireAuth, (req, res) => {
   );
 });
 
+// CREATE
 router.post('/create', requireAuth, async (req, res, next) => {
   try {
     const { fieldErrors, sanitizedData } = validateStreetFoodForm(req.body);
 
     if (Object.keys(fieldErrors).length > 0) {
       return res.status(400).render(
-        'street_food/street_food',
+        'forms/street_food/street_food',
         buildFormView({
           title: 'Add food',
           pageTitle: 'Add new food',
@@ -421,18 +429,9 @@ router.post('/create', requireAuth, async (req, res, next) => {
       sanitizedData;
 
     await db.query(
-      `
-      INSERT INTO street_food (
-        food_name,
-        country,
-        spicy_level,
-        price,
-        rating,
-        image_url,
-        user_id
-      )
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      `,
+      `INSERT INTO street_food 
+      (food_name, country, spicy_level, price, rating, image_url, user_id)
+      VALUES ($1,$2,$3,$4,$5,$6,$7)`,
       [
         food_name,
         country,
@@ -450,29 +449,27 @@ router.post('/create', requireAuth, async (req, res, next) => {
   }
 });
 
+// EDIT
 router.get('/edit/:id', requireAuth, async (req, res, next) => {
   try {
     const result = await db.query(
-      `
-      SELECT *
-      FROM street_food
-      WHERE id = $1 AND user_id = $2
-      LIMIT 1
-      `,
-      [req.params.id, req.session.user.id]
+      `SELECT * FROM street_food
+       WHERE id = $1 AND (user_id = $2 OR $3 = 'admin')`,
+      [
+        req.params.id,
+        req.session.user.id,
+        req.session.user.role
+      ]
     );
 
     const item = result.rows[0];
 
     if (!item) {
-      return res.status(404).render('error', {
-        message: 'Food not found',
-        error: {}
-      });
+      return res.redirect('/street_food');
     }
 
     res.render(
-      'street_food/street_food',
+      'forms/street_food/street_food',
       buildFormView({
         title: 'Edit food',
         pageTitle: 'Edit food',
@@ -486,22 +483,20 @@ router.get('/edit/:id', requireAuth, async (req, res, next) => {
   }
 });
 
+// UPDATE
 router.post('/update/:id', requireAuth, async (req, res, next) => {
   try {
     const { fieldErrors, sanitizedData } = validateStreetFoodForm(req.body);
 
     if (Object.keys(fieldErrors).length > 0) {
       return res.status(400).render(
-        'street_food/street_food',
+        'forms/street_food/street_food',
         buildFormView({
           title: 'Edit food',
           pageTitle: 'Edit food',
           action: `/street_food/update/${req.params.id}`,
           buttonText: 'Save changes',
-          item: {
-            id: req.params.id,
-            ...req.body
-          },
+          item: { id: req.params.id, ...req.body },
           fieldErrors
         })
       );
@@ -511,16 +506,10 @@ router.post('/update/:id', requireAuth, async (req, res, next) => {
       sanitizedData;
 
     await db.query(
-      `
-      UPDATE street_food
-      SET food_name = $1,
-          country = $2,
-          spicy_level = $3,
-          price = $4,
-          rating = $5,
-          image_url = $6
-      WHERE id = $7 AND user_id = $8
-      `,
+      `UPDATE street_food
+       SET food_name=$1, country=$2, spicy_level=$3,
+           price=$4, rating=$5, image_url=$6
+       WHERE id=$7 AND (user_id=$8 OR $9='admin')`,
       [
         food_name,
         country,
@@ -529,7 +518,8 @@ router.post('/update/:id', requireAuth, async (req, res, next) => {
         rating,
         image_url,
         req.params.id,
-        req.session.user.id
+        req.session.user.id,
+        req.session.user.role
       ]
     );
 
@@ -539,14 +529,17 @@ router.post('/update/:id', requireAuth, async (req, res, next) => {
   }
 });
 
+// DELETE
 router.post('/delete/:id', requireAuth, async (req, res, next) => {
   try {
     await db.query(
-      `
-      DELETE FROM street_food
-      WHERE id = $1 AND user_id = $2
-      `,
-      [req.params.id, req.session.user.id]
+      `DELETE FROM street_food
+       WHERE id=$1 AND (user_id=$2 OR $3='admin')`,
+      [
+        req.params.id,
+        req.session.user.id,
+        req.session.user.role
+      ]
     );
 
     res.redirect('/street_food');
@@ -554,15 +547,4 @@ router.post('/delete/:id', requireAuth, async (req, res, next) => {
     next(err);
   }
 });
-
-router.get('/test-db', async (req, res) => {
-  try {
-    const result = await db.query('SELECT * FROM street_food ORDER BY id ASC');
-    res.json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('DB error');
-  }
-});
-
 export default router;
