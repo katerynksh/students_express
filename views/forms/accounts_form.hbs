@@ -190,11 +190,14 @@
       <label>
         Email
         <input
-          type="text"
+          type="email"
           name="email"
           placeholder="Enter email..."
           value="{{item.email}}"
           aria-required="true"
+          autocomplete="off"
+          oninvalid="this.setCustomValidity('incorrect data. Add @')"
+          oninput="this.setCustomValidity('')"
         />
       </label>
 
@@ -206,6 +209,7 @@
           placeholder="Enter username..."
           value="{{item.user_name}}"
           aria-required="true"
+          autocomplete="off"
         />
       </label>
       <label>
@@ -218,6 +222,11 @@
             placeholder="Enter password..."
             value="{{item.password}}"
             aria-required="true"
+            autocomplete="off"
+            pattern="^(?=.*[A-Z])(?=.*\d).+$"
+
+            oninvalid="this.setCustomValidity('Uppercase letter and number required!')"
+            oninput="this.setCustomValidity('')"
           />
           <button
             type="button"

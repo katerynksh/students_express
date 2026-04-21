@@ -1,0 +1,207 @@
+<link rel="stylesheet" href="/stylesheets/notabug.css">
+
+<div class="page-wrap {{chaosBodyClass}}">
+  <div class="topbar-nav">
+    <a href="/" class="nav-link">Home</a>
+  </div>
+  <nav class="topbar">
+    <div class="topbar-logo">
+      <span class="bug-icon">🐞</span>
+      <span class="glitch-text" data-text="Not A Bug">Not A Bug</span>
+    </div>
+
+    <div class="topbar-nav">
+      <a href="/notabug" class="nav-link active">Dashboard</a>
+      <a href="/notabug/report" class="nav-link">Report Bug</a>
+      {{#if user}}
+        <a href="/notabug/profile/{{user.username}}" class="nav-link">Profile ({{user.username}})</a>
+        <a href="/notabug/logout" class="nav-link">Logout</a>
+      {{else}}
+        <a href="/notabug/login" class="nav-link">Login</a>
+        <a href="/notabug/register" class="nav-link">Register</a>
+      {{/if}}
+    </div>
+
+    <div class="topbar-stats">
+      <div class="stat-chip chaos {{globalChaosClass}}">
+        <span>🔥 Chaos</span>
+        <span class="val">{{chaosLevel}}%</span>
+      </div>
+      <div class="stat-chip">
+        <span>🧠 Sanity</span>
+        <span class="val">{{globalSanity}}%</span>
+      </div>
+      <div class="stat-chip">
+        <span>👥 Hunters</span>
+        <span class="val">{{activeHunters}}</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main">
+    <div class="section-header">
+      <div class="section-label">// LIVE BUG ECOSYSTEM</div>
+      <div class="section-title">Bug Marketplace</div>
+      <div class="section-sub">Report, claim, and fix bugs before they escape. Or don't. The system evolves either way.</div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="dot"></span>
+              Active Bug Registry
+              {{#if canCreateNewBugs}}
+                <span style="font-size:10px; color:var(--text-muted); margin-left:8px;">({{openBugsCount}}/{{maxOpenBugs}})</span>
+              {{else}}
+                <span style="font-size:10px; color:var(--danger); margin-left:8px;">⚠ CAPACITY {{openBugsCount}}/{{maxOpenBugs}}</span>
+              {{/if}}
+            </div>
+            <a href="/notabug/report" class="btn btn-primary" {{#unless canCreateNewBugs}}disabled style="opacity:0.5; cursor:not-allowed;"{{/unless}}>
+              {{#if canCreateNewBugs}}+ Report Bug{{else}}⚠ System Full{{/if}}
+            </a>
+          </div>
+
+          <div style="padding:0 20px 12px 20px; display:flex; gap:8px; border-bottom:1px solid var(--border); flex-wrap:wrap;">
+            <a href="/notabug" class="filter-btn {{#eq filterStatus 'all'}}active{{/eq}}" style="padding:6px 12px; font-size:11px; border-radius:4px; border:1px solid var(--border); {{#eq filterStatus 'all'}}background:var(--accent); color:var(--bg);{{else}}background:transparent; color:var(--text-muted);{{/eq}} text-decoration:none; cursor:pointer;">
+              All Bugs
+            </a>
+            <a href="/notabug?status=open" class="filter-btn {{#eq filterStatus 'open'}}active{{/eq}}" style="padding:6px 12px; font-size:11px; border-radius:4px; border:1px solid var(--border); {{#eq filterStatus 'open'}}background:var(--accent); color:var(--bg);{{else}}background:transparent; color:var(--text-muted);{{/eq}} text-decoration:none; cursor:pointer;">
+              🔓 Open & Claimed
+            </a>
+            <a href="/notabug?status=closed" class="filter-btn {{#eq filterStatus 'closed'}}active{{/eq}}" style="padding:6px 12px; font-size:11px; border-radius:4px; border:1px solid var(--border); {{#eq filterStatus 'closed'}}background:var(--accent); color:var(--bg);{{else}}background:transparent; color:var(--text-muted);{{/eq}} text-decoration:none; cursor:pointer;">
+              ✓ Fixed & Escaped
+            </a>
+          </div>
+
+          <div class="bug-table-wrap">
+            <table class="bug-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th>Severity</th>
+                  <th>Chaos</th>
+                  <th>Bounty</th>
+                  <th>Status</th>
+                  <th>Claimed By</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="bugs-body">
+                {{#each bugs}}
+                <tr class="{{#if isCritical}}critical-row{{/if}} {{#if (eq status 'escaped')}}escaped-row{{/if}}">
+                  <td class="text-muted" style="color:var(--text-muted); font-size:11px;">#{{id}}</td>
+                  <td>
+                    <a href="/notabug/bug/{{id}}" style="color:var(--text); font-weight:600; font-size:12px;">
+                      {{title}}
+                    </a>
+                  </td>
+                  <td><span class="severity-badge {{severityClass}}">{{severity}}</span></td>
+                  <td>
+                    <div class="chaos-bar-wrap chaos-{{chaosClass}}">
+                      <div class="chaos-bar">
+                        <div class="chaos-fill" style="width:{{chaos_level}}%"></div>
+                      </div>
+                      <span class="chaos-val">{{chaos_level}}</span>
+                    </div>
+                  </td>
+                  <td><span class="bounty-val">{{bountyFormatted}}</span></td>
+                  <td><span class="status-badge {{statusClass}}">{{status}}</span></td>
+                  <td style="color:var(--text-dim); font-size:11px;">{{#if claimed_by}}@{{claimed_by}}{{else}}—{{/if}}</td>
+                  <td>
+                    <div class="row-actions">
+                      <a href="/notabug/bug/{{id}}" class="btn btn-ghost" style="padding:4px 8px; font-size:10px;">View</a>
+                    </div>
+                  </td>
+                </tr>
+                {{else}}
+                <tr>
+                  <td colspan="8" class="empty-state">
+                    <span class="empty-icon">🐞</span>
+                    No bugs yet. The system is suspiciously quiet.
+                  </td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card feed-card">
+          <div class="chaos-meter-wrap">
+            <div class="chaos-meter-label">
+              <span>Global Chaos Level</span>
+              <span style="color:var(--warn)">{{chaosLevel}}%</span>
+            </div>
+            <div class="chaos-meter-track">
+              <div class="chaos-meter-fill" id="global-chaos-fill"
+                   style="width:{{chaosLevel}}%; background: linear-gradient(90deg, var(--accent2), var(--accent));">
+              </div>
+            </div>
+          </div>
+
+          <div class="card-header">
+            <div class="card-title">
+              <span class="dot"></span>
+              Live Activity Feed
+            </div>
+          </div>
+
+          <div class="feed-list scrollbar-thin" id="feed-list">
+            {{#each feed}}
+            <div class="feed-item">
+              <span class="feed-time">{{timeStr}}</span>
+              <span class="feed-msg">{{{message}}}</span>
+            </div>
+            {{else}}
+            <div class="feed-item">
+              <span class="feed-time">--:--</span>
+              <span class="feed-msg" style="color:var(--text-muted)">System initializing...</span>
+            </div>
+            {{/each}}
+          </div>
+
+          <div class="new-bug-btn-wrap">
+            <a href="/notabug/report" class="btn btn-primary" style="width:100%; justify-content:center;">
+              🐞 Report New Bug
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  let chaosLevel = {{chaosLevel}};
+
+  function tick() {
+    fetch('/notabug/system/tick', { method: 'POST' })
+      .then(r => r.json())
+      .then(() => {
+        setTimeout(function() { window.location.reload(); }, 500);
+      })
+      .catch(function() {});
+  }
+
+  const tickInterval = chaosLevel > 70 ? 12000 : chaosLevel > 40 ? 20000 : 30000;
+  setTimeout(tick, tickInterval);
+
+  if (chaosLevel > 80) {
+    setInterval(function() {
+      const cells = document.querySelectorAll('.bug-table td, .chaos-val');
+      const rand = cells[Math.floor(Math.random() * cells.length)];
+      if (rand && rand.textContent) {
+        const orig = rand.textContent;
+        rand.style.opacity = '0.3';
+        setTimeout(function() { rand.style.opacity = '1'; }, 200);
+      }
+    }, 3000);
+  }
+})();
+</script>

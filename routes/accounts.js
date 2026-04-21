@@ -3,7 +3,7 @@ const router = express.Router();
 import db from "../db/connector.js";
 
 router.get("/", async function (req, res, next) {
-  const account = await db.query("SELECT * FROM users_users");
+  const account = await db.query("SELECT * FROM accounts");
   const rowAccounts = account.rows.map((a) => {
     return {
       ...a,
@@ -45,7 +45,7 @@ router.post("/createAccount", async function (req, res, next) {
   async function addAccount(email, user_name, password) {
     try {
       const query = `
-      INSERT INTO users_users (email, user_name, password) 
+      INSERT INTO accounts (email, user_name, password) 
       VALUES ($1, $2, $3) 
       RETURNING *`;
       const res = await db.query(query, [email, user_name, password]);
@@ -66,7 +66,7 @@ router.post("/createAccount", async function (req, res, next) {
 //EDIT
 router.get("/edit/:id", async function (req, res, next) {
   try {
-    const result = await db.query("SELECT * FROM users_users WHERE id = $1", [
+    const result = await db.query("SELECT * FROM accounts WHERE id = $1", [
       req.params.id,
     ]);
 
@@ -111,7 +111,7 @@ router.post("/edit/:id", async function (req, res, next) {
     }
 
     await db.query(
-      `UPDATE users_users SET email = $1, user_name = $2 WHERE id = $3`,
+      `UPDATE accounts SET email = $1, user_name = $2 WHERE id = $3`,
       [email, user_name, id],
     );
 
@@ -125,7 +125,7 @@ router.post("/edit/:id", async function (req, res, next) {
 router.get("/delete/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    await db.query("DELETE FROM users_users WHERE id = $1", [id]);
+    await db.query("DELETE FROM accounts WHERE id = $1", [id]);
     res.redirect("/accounts");
   } catch (err) {
     console.error("Delete error:", err);

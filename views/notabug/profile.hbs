@@ -1,0 +1,174 @@
+<link rel="stylesheet" href="/stylesheets/notabug.css">
+
+<div class="page-wrap {{chaosBodyClass}}">
+  <nav class="topbar">
+    <div class="topbar-logo">
+      <span class="bug-icon">🐞</span>
+      <span class="glitch-text" data-text="NotABug">NotABug</span>
+    </div>
+
+    <div class="topbar-nav">
+      <a href="/notabug" class="nav-link">Dashboard</a>
+      <a href="/notabug/report" class="nav-link">Report Bug</a>
+      {{#if user}}
+        <a href="/notabug/profile/{{user.username}}" class="nav-link active">Profile ({{user.username}})</a>
+        <a href="/notabug/logout" class="nav-link">Logout</a>
+      {{else}}
+        <a href="/notabug/login" class="nav-link">Login</a>
+        <a href="/notabug/register" class="nav-link">Register</a>
+      {{/if}}
+    </div>
+
+    <div class="topbar-stats">
+      <div class="stat-chip chaos {{globalChaosClass}}">
+        <span>🔥 Chaos</span>
+        <span class="val">{{chaosLevel}}%</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main">
+    <div style="margin-bottom:20px;">
+      <a href="/notabug" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    <div class="profile-grid">
+      <div>
+        <div class="card profile-card" style="margin-bottom:16px;">
+          <div class="profile-avatar">🧑‍💻</div>
+          <div class="profile-name">{{user.username}}</div>
+          <div class="profile-handle" style="font-family:'Space Mono',monospace;">@{{user.username}} · bug hunter</div>
+
+          <div class="sanity-bar-wrap">
+            <div class="sanity-label">
+              <span>🧠 Sanity</span>
+              <span>{{user.sanityPct}}%</span>
+            </div>
+            <div class="sanity-bar {{user.sanityClass}}">
+              <div class="sanity-fill" style="width:{{user.sanityPct}}%"></div>
+            </div>
+          </div>
+
+          <div class="sanity-effects">
+            <div class="effect-label">Current State</div>
+            <div class="{{#if (eq user.sanityClass 'sanity-100')}}sanity-normal{{/if}}
+                        {{#if (eq user.sanityClass 'sanity-50')}}sanity-warning{{/if}}
+                        {{#if (eq user.sanityClass 'sanity-30')}}sanity-danger{{/if}}
+                        {{#if (eq user.sanityClass 'sanity-10')}}sanity-critical{{/if}}">
+              {{user.sanityEffect}}
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="padding:0;">
+            <div class="stat-row">
+              <div class="stat-cell">
+                <div class="stat-cell-label">💰 Balance</div>
+                <div class="stat-cell-val success">${{user.balance}}</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-cell-label">⭐ Reputation</div>
+                <div class="stat-cell-val accent2">{{user.reputation}}</div>
+              </div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-cell">
+                <div class="stat-cell-label">✓ Bugs Fixed</div>
+                <div class="stat-cell-val" style="color:var(--success);">{{user.bugs_fixed}}</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-cell-label">✗ Bugs Failed</div>
+                <div class="stat-cell-val" style="color:var(--danger);">{{user.bugs_failed}}</div>
+              </div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-cell" style="grid-column: 1/-1;">
+                <div class="stat-cell-label">📋 Active Claims</div>
+                <div class="stat-cell-val accent">{{activeBugs.length}}</div>
+              </div>
+            </div>
+            {{#if isOwnProfile}}
+            <div class="stat-row" style="border-top:1px solid var(--border); padding-top:12px;">
+              <div class="stat-cell" style="grid-column: 1/-1; font-size:10px; color:var(--text-muted);">
+                <strong>Member since:</strong> {{user.created_at}}
+              </div>
+            </div>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="dot"></span>
+              Active Claims
+            </div>
+          </div>
+
+          {{#if activeBugs.length}}
+          <table class="bug-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Severity</th>
+                <th>Chaos</th>
+                <th>Bounty</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each activeBugs}}
+              <tr>
+                <td style="color:var(--text-muted); font-size:11px;">#{{id}}</td>
+                <td style="font-weight:600; font-size:12px;">{{title}}</td>
+                <td><span class="severity-badge severity-{{severity}}">{{severity}}</span></td>
+                <td style="color:var(--warn); font-family:'Space Mono',monospace; font-size:11px;">{{chaos_level}}%</td>
+                <td><span class="bounty-val">{{#if bounty}}${{bounty}}{{else}}—{{/if}}</span></td>
+                <td><a href="/notabug/bug/{{id}}" class="btn btn-ghost" style="padding:4px 8px; font-size:10px;">Fix</a></td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+          {{else}}
+          <div class="empty-state">
+            <span class="empty-icon">🎯</span>
+            No active claims. Claim a bug from the dashboard.
+          </div>
+          {{/if}}
+        </div>
+
+        <div class="card" style="margin-top:16px;">
+          <div class="card-header">
+            <div class="card-title">Sanity Reference</div>
+          </div>
+          <div style="padding:16px 20px;">
+            <table style="width:100%; border-collapse:collapse; font-size:11px;">
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:8px 0; color:var(--text-dim);">50–100%</td>
+                  <td style="padding:8px 0; color:var(--success);">Normal operations</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:8px 0; color:var(--text-dim);">30–50%</td>
+                  <td style="padding:8px 0; color:var(--warn);">Minor UI glitches detected</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:8px 0; color:var(--text-dim);">10–30%</td>
+                  <td style="padding:8px 0; color:var(--high);">Fake bugs may appear</td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0; color:var(--text-dim);">0–10%</td>
+                  <td style="padding:8px 0; color:var(--danger); animation:flicker 0.5s infinite;">REALITY UNRELIABLE</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,107 @@
+<link rel="stylesheet" href="/stylesheets/notabug.css">
+
+<div class="page-wrap {{chaosBodyClass}}">
+  <nav class="topbar">
+    <div class="topbar-logo">
+      <span class="bug-icon">🐞</span>
+      <span class="glitch-text" data-text="NotABug">NotABug</span>
+    </div>
+
+    <div class="topbar-nav">
+      <a href="/notabug" class="nav-link">Dashboard</a>
+      <a href="/notabug/report" class="nav-link active">Report Bug</a>
+    </div>
+
+    <div class="topbar-stats">
+      <div class="stat-chip chaos {{globalChaosClass}}">
+        <span>🔥 Chaos</span>
+        <span class="val">{{chaosLevel}}%</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main" style="max-width:760px;">
+    <div style="margin-bottom:20px;">
+      <a href="/notabug" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    <div class="section-header">
+      <div class="section-label">// REPORT ENDPOINT</div>
+      <div class="section-title">Report Bug</div>
+      <div class="section-sub">
+        Warning: The system may alter your report. Chaos level assigned randomly. Bugs may mutate, spawn children, or deny their own existence. Report responsibly.
+      </div>
+    </div>
+
+    {{#if error}}
+    <div class="card" style="border-color: var(--danger); margin-bottom: 20px;">
+      <div style="padding: 16px 20px; color: var(--danger); font-size: 12px; line-height: 1.6;">
+        <strong>⚠ System Error:</strong> {{{error}}}
+      </div>
+    </div>
+    {{/if}}
+
+    <div class="card">
+      <div style="padding:4px 20px 0; border-bottom:1px solid var(--border);">
+        <div style="display:flex; gap:16px; font-size:10px; color:var(--text-muted); padding:12px 0; letter-spacing:1px; text-transform:uppercase; flex-wrap:wrap;">
+          <span>⚠ Description may be mutated</span>
+          <span>|</span>
+          <span>⚠ Chaos level assigned by system</span>
+          <span>|</span>
+          <span>⚠ Bug may be marked unstable</span>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <form method="POST" action="/notabug/report">
+          <div class="form-grid">
+            <div class="form-field full">
+              <label class="form-label">Bug Title *</label>
+              <input type="text" name="title" class="form-input" placeholder="Briefly describe the issue..." required>
+            </div>
+
+            <div class="form-field full">
+              <label class="form-label">Description</label>
+              <textarea name="description" class="form-textarea" placeholder="What happened? What did you expect? (May be altered by the system)"></textarea>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">Severity *</label>
+              <select name="severity" class="form-select" required>
+                <option value="">Select severity...</option>
+                <option value="low">Low — minor inconvenience</option>
+                <option value="medium">Medium — noticeable impact</option>
+                <option value="high">High — significant disruption</option>
+                <option value="critical">Critical — system on fire</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">Bounty ($) — Optional</label>
+              <input type="number" name="bounty" class="form-input" placeholder="0" min="0" max="9999">
+            </div>
+
+            <div class="form-field full">
+              <label class="form-label">Steps to Reproduce — Optional</label>
+              <input type="text" name="steps" class="form-input" placeholder="e.g. Only happens after refresh. Cannot reproduce consistently.">
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a href="/notabug" class="btn btn-ghost">Cancel</a>
+            <button type="submit" class="btn btn-primary">
+              🐞 Submit Report
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div style="margin-top:16px; padding:14px 16px; background:var(--bg2); border:1px solid var(--border); font-size:11px; color:var(--text-muted); line-height:1.8;">
+      <strong style="color:var(--text-dim);">SYSTEM NOTICE:</strong>
+      By submitting this report you acknowledge that the bug may mutate, escape, spawn children, or deny its own existence.
+      NotABug is not responsible for any reality instability caused by high chaos levels.
+      Your sanity is your own problem. Hehehhehehehe
+    </div>
+  </div>
+</div>

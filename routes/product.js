@@ -2,12 +2,16 @@ import express from 'express';
 const router = express.Router();
 import db from '../db/connector.js';
 
+const regexBarcode = /^([0-9]{8,13})$/
+const regexName = /^([A-ZА-Я][a-zа-я0-9\s]{3,20})$/
+const regexPrice = /^([0-9][0-9]*)$/
+const regexQuantity = /^[0-9]+$/
+
 router.get('/', async function(req, res, next) {
   const product = await db.query('SELECT * FROM product');
   const rowProduct = product.rows.map(s => {
     return {
-      ...s,
-      //created_at_time: s.created_at.toLocaleTimeString(), 
+      ...s, 
       //created_at_date: s.created_at.toLocaleDateString()
     }
   })
@@ -23,14 +27,31 @@ router.get("/add", (req, res) => {
 });
 
 router.post("/add", async (req, res) => {
-  res.render("forms/product_form", { isEdit: false });
   try {
-    const { barcode, name, price, quantity } = req.body;
+    const id = req.params.id;
+    const barcode =req.body.barcode;
+    const name = req.body.name;
+    const price = req.body.price;
+    const quantity = req.body.quantity
+
+    if(!regexBarcode.test(barcode)) {
+    return res.status(400).send("Invalid product barcode you can use only numbers, min 8, max 13");
+}
+    if(!regexName.test(name)) {
+    return res.status(400).send("Invalid product name you can use only letters, numbers and spaces and it should start with capital letter or number / only english and ukraine letters");
+}
+    if(!regexPrice.test(price)) {
+    return res.status(400).send("Invalid product price you can use only numbers and must be $ at the end");
+}
+    if(!regexQuantity.test(quantity)) {
+    return res.status(400).send("Invalid product quantity you can use only numbers");
+}
 
     const query = `
       INSERT INTO product (barcode, name, price, quantity)
       VALUES ($1, $2, $3, $4)
     `;
+    const values = [id, barcode, name, price, quantity];
 
     await db.query(query, [
       barcode || "Unknown",
@@ -74,8 +95,25 @@ router.get("/edit/:id", async (req, res) => {
 
 router.post("/update/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-    const { barcode, name, price, quantity } = req.body;
+
+    const id = req.params.id;
+    const barcode =req.body.barcode;
+    const name = req.body.name;
+    const price = req.body.price;
+    const quantity = req.body.quantity
+
+    if(!regexBarcode.test(barcode)) {
+    return res.status(400).send("Invalid product barcode you can use only numbers, min 8, max 13");
+}
+    if(!regexName.test(name)) {
+    return res.status(400).send("Invalid product name you can use only letters, numbers and spaces and it should start with capital letter or number / only english and ukraine letters");
+}
+    if(!regexPrice.test(price)) {
+    return res.status(400).send("Invalid product price you can use only numbers and must be $ at the end");
+}
+    if(!regexQuantity.test(quantity)) {
+    return res.status(400).send("Invalid product quantity you can use only numbers");
+}
 
     const query = `
       UPDATE product

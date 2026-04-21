@@ -15,46 +15,62 @@
   .form-container {
     background: #ffffff;
     border: 3px solid #000000; 
-    width: 420px;
-    padding: 20px;
+    width: 460px;
+    padding: 10px 20px;
     position: relative;
     box-shadow: 10px 10px 0px #000000; 
     box-sizing: border-box;
-    left: 500px; 
-
+    max-height: 98vh; 
+    overflow: hidden;
+    left: 500px;
   }
 
   h2 {
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 900;
     text-transform: uppercase;
-    margin: 0 0 15px 0;
+    margin: 0 0 8px 0;
     border-bottom: 2px solid #000;
-    padding-bottom: 5px;
+    padding-bottom: 3px;
     letter-spacing: -1px;
     color: #000000;
   }
 
   .form-group {
-    margin-bottom: 10px;
+    margin-bottom: 4px; 
+    position: relative; 
+    display: flex;
+    flex-direction: column;
   }
 
   label {
     display: block;
     font-weight: 900;
     text-transform: uppercase;
-    font-size: 10px;
-    margin-bottom: 4px;
+    font-size: 8.5px;
+    margin-bottom: 2px;
     color: #000000;
+    max-width: 100%;
+  }
+
+  .error-hint {
+    display: block;      
+    position: static;    
+    color: #ff4d4d;
+    font-size: 8px; 
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 2px;  
+    letter-spacing: 0.5px;
+    line-height: 1;
   }
 
   input[type="text"], 
   input[type="number"], 
-  textarea,
-  select {
+  textarea {
     width: 100%;
     border: 2px solid #000;
-    padding: 10px;
+    padding: 6px 10px; 
     background-color: #1a1f26; 
     color: #ffffff; 
     font-weight: 800;
@@ -73,9 +89,15 @@
     background-color: #252b36;
   }
 
+  .invalid-input {
+    border-color: #ff4d4d;
+    box-shadow: inset 0 0 5px rgba(255, 77, 77, 0.2);
+  }
   .row {
     display: flex;
     gap: 10px;
+    margin-bottom: 0px;
+    align-items: flex-end;
   }
 
   .row > div {
@@ -86,7 +108,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 10px 0;
+    margin: 6px 0;
     font-weight: 900;
     font-size: 10px;
     text-transform: uppercase;
@@ -106,9 +128,9 @@
     background-color: #000;
     color: #fff;
     border: 2px solid #000;
-    padding: 12px;
+    padding: 8px;
     font-weight: 900;
-    font-size: 14px;
+    font-size: 12px;
     text-transform: uppercase;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -123,11 +145,11 @@
   .btn-back {
     display: block;
     text-align: center;
-    margin-top: 15px;
+    margin-top: 5px;
     color: #000;
     text-decoration: none;
     font-weight: 900;
-    font-size: 10px;
+    font-size: 9px;
     text-transform: uppercase;
     text-decoration: underline;
   }
@@ -136,10 +158,9 @@
 <div class="form-container">
   <h2>{{#if isEdit}}Edit Cat{{else}}Register New Cat{{/if}}</h2>
 
-  <form action="{{#if isEdit}}/cats/update{{else}}/cats/add{{/if}}" method="POST">
+  <form action="{{#if isEdit}}/cats/edit{{else}}/cats/add{{/if}}" method="POST">
     
     <input type="hidden" name="username" value="{{username}}">
-    
     {{#if isEdit}}
       <input type="hidden" name="cat_id" value="{{cat.id}}">
     {{/if}}
@@ -147,33 +168,59 @@
     <div class="row">
       <div class="form-group">
         <label>Cat Name</label>
-        <input type="text" name="name" placeholder="MEOWTH" value="{{cat.name}}" required>
+        {{#if errors.name}}
+          <span class="error-hint">{{errors.name}}</span>
+        {{/if}}
+        <input type="text" name="name" placeholder="MEOWTH" 
+          value="{{#if formData.name}}{{formData.name}}{{else}}{{cat.name}}{{/if}}" 
+          class="{{#if errors.name}}invalid-input{{/if}}" required>
       </div>
       <div class="form-group">
         <label>Breed</label>
-        <input type="text" name="breed" placeholder="MIXED" value="{{cat.breed}}">
+        {{#if errors.breed}}
+          <span class="error-hint">{{errors.breed}}</span>
+        {{/if}}
+        <input type="text" name="breed" placeholder="MIXED" 
+          value="{{#if formData.breed}}{{formData.breed}}{{else}}{{cat.breed}}{{/if}}"
+          class="{{#if errors.breed}}invalid-input{{/if}}">
       </div>
     </div>
 
     <div class="row">
       <div class="form-group">
         <label>Age (Y)</label>
-        <input type="number" name="age_years" placeholder="0" value="{{cat.age_years}}">
+        {{#if errors.age_years}}
+          <span class="error-hint">{{errors.age_years}}</span>
+        {{/if}}
+        <input type="number" name="age_years" placeholder="0" 
+          value="{{#if formData.age_years}}{{formData.age_years}}{{else}}{{cat.age_years}}{{/if}}"
+          class="{{#if errors.age_years}}invalid-input{{/if}}">
       </div>
       <div class="form-group">
         <label>Weight (KG)</label>
-        <input type="number" step="0.1" name="weight_kg" placeholder="0.0" value="{{cat.weight_kg}}">
+        {{#if errors.weight_kg}}
+          <span class="error-hint">{{errors.weight_kg}}</span>
+        {{/if}}
+        <input type="number" step="0.1" name="weight_kg" placeholder="0.0" 
+          value="{{#if formData.weight_kg}}{{formData.weight_kg}}{{else}}{{cat.weight_kg}}{{/if}}"
+          class="{{#if errors.weight_kg}}invalid-input{{/if}}">
       </div>
     </div>
 
     <div class="row">
       <div class="form-group">
         <label>Favorite Food</label>
-        <input type="text" name="favorite_food" placeholder="TUNA" value="{{cat.favorite_food}}">
+        <input type="text" name="favorite_food" placeholder="TUNA" 
+          value="{{#if formData.favorite_food}}{{formData.favorite_food}}{{else}}{{cat.favorite_food}}{{/if}}">
       </div>
       <div class="form-group">
         <label>Owner Contact</label>
-        <input type="text" name="owner_contact" placeholder="EMAIL/PHONE" value="{{cat.owner_contact}}">
+        {{#if errors.owner_contact}}
+          <span class="error-hint">{{errors.owner_contact}}</span>
+        {{/if}}
+        <input type="text" name="owner_contact" placeholder="EMAIL/PHONE" 
+          value="{{#if formData.owner_contact}}{{formData.owner_contact}}{{else}}{{cat.owner_contact}}{{/if}}"
+          class="{{#if errors.owner_contact}}invalid-input{{/if}}">
       </div>
     </div>
 
@@ -184,7 +231,7 @@
 
     <div class="form-group">
       <label>Character Notes</label>
-      <textarea name="character_notes" rows="2" placeholder="NOTES...">{{cat.character_notes}}</textarea>
+      <textarea name="character_notes" rows="2" placeholder="NOTES...">{{#if formData.character_notes}}{{formData.character_notes}}{{else}}{{cat.character_notes}}{{/if}}</textarea>
     </div>
 
     <button type="submit" class="btn-submit">

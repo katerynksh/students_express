@@ -1,0 +1,306 @@
+<link rel="stylesheet" href="/stylesheets/notabug.css">
+
+<div class="page-wrap {{chaosBodyClass}}">
+  <nav class="topbar">
+    <div class="topbar-logo">
+      <span class="bug-icon">🐞</span>
+      <span class="glitch-text" data-text="NotABug">NotABug</span>
+    </div>
+
+    <div class="topbar-nav">
+      <a href="/notabug" class="nav-link">Dashboard</a>
+      <a href="/notabug/report" class="nav-link">Report Bug</a>
+      {{#if user}}
+        <a href="/notabug/profile/{{user.username}}" class="nav-link">Profile ({{user.username}})</a>
+        <a href="/notabug/logout" class="nav-link">Logout</a>
+      {{else}}
+        <a href="/notabug/login" class="nav-link">Login</a>
+        <a href="/notabug/register" class="nav-link">Register</a>
+      {{/if}}
+    </div>
+
+    <div class="topbar-stats">
+      <div class="stat-chip chaos {{globalChaosClass}}">
+        <span>🔥 Chaos</span>
+        <span class="val">{{chaosLevel}}%</span>
+      </div>
+      <div class="stat-chip">
+        <span>🧠 Sanity</span>
+        <span class="val">{{globalSanity}}%</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main">
+    <div style="margin-bottom:20px;">
+      <a href="/notabug" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    {{#if outcome}}
+    <div class="fix-result-overlay show" id="fix-overlay">
+      <div class="fix-result-card {{#if (eq outcome 'success')}}fix-result-success{{/if}}{{#if (eq outcome 'fail')}}fix-result-fail{{/if}}{{#if (eq outcome 'catastrophe')}}fix-result-spawn{{/if}}">
+        {{#if (eq outcome 'success')}}
+          <span class="fix-result-icon">✓</span>
+          <div class="fix-result-title">Bug Fixed!</div>
+          <div class="fix-result-msg">The bug has been squashed. Bounty awarded. Chaos decreased. For now.</div>
+        {{/if}}
+        {{#if (eq outcome 'fail')}}
+          <span class="fix-result-icon">✗</span>
+          <div class="fix-result-title">Fix Failed</div>
+          <div class="fix-result-msg">The bug resisted. Chaos increased. Your sanity took damage. Maybe try again?</div>
+        {{/if}}
+        {{#if (eq outcome 'catastrophe')}}
+          <span class="fix-result-icon">💥</span>
+          <div class="fix-result-title">Catastrophic Failure</div>
+          <div class="fix-result-msg">The fix attempt caused a cascade. New bugs have been spawned into the ecosystem. This is fine.</div>
+        {{/if}}
+        <button class="btn btn-ghost" onclick="document.getElementById('fix-overlay').classList.remove('show')" style="width:100%; justify-content:center;">
+          Dismiss
+        </button>
+      </div>
+    </div>
+    {{/if}}
+
+    {{#if validationError}}
+    <div class="card" style="border-color: var(--danger); margin-bottom: 20px;">
+      <div style="padding: 16px 20px; color: var(--danger); font-family: 'Space Mono', monospace; font-size: 11px;">
+        <strong>⚠ VALIDATION ERROR</strong><br>
+        {{validationError}}
+      </div>
+    </div>
+    {{/if}}
+
+    <div class="bug-detail-layout">
+      <div>
+        <div class="card" style="margin-bottom:20px;">
+          <div class="bug-overview">
+            <div class="bug-title-row">
+              <div>
+                <div style="font-size:11px; color:var(--text-muted); margin-bottom:6px; font-family:'Space Mono',monospace;">
+                  BUG #{{bug.id}}
+                </div>
+                <div class="bug-title">{{bug.title}}</div>
+              </div>
+              <span class="severity-badge {{bug.severityClass}}">{{bug.severity}}</span>
+            </div>
+
+            <div class="bug-meta-row">
+              <span class="status-badge {{bug.statusClass}}">{{bug.status}}</span>
+              {{#if bug.claimed_by}}
+              <span class="tag">
+                claimed by @{{bug.claimed_by}}
+              </span>
+              {{/if}}
+              {{#if bug.bounty}}
+              <span class="tag" style="color:var(--success); border-color:rgba(0,255,136,0.2);">
+                bounty: ${{bug.bounty}}
+              </span>
+              {{/if}}
+            </div>
+
+            <div class="bug-desc">{{bug.description}}</div>
+
+            {{#if bug.steps_to_reproduce}}
+            <div style="margin-bottom:20px;">
+              <div style="font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px;">
+                Reproduction Steps
+              </div>
+              <div class="repro-steps">
+                <div class="repro-step">
+                  <span class="repro-num">01</span>
+                  <span>{{bug.steps_to_reproduce}}</span>
+                </div>
+                <div class="repro-step">
+                  <span class="repro-num">02</span>
+                  <span style="color:var(--text-muted); font-style:italic;">Results may vary. Cannot reproduce consistently.</span>
+                </div>
+              </div>
+            </div>
+            {{/if}}
+
+            <div style="margin-bottom:0;">
+              <div style="font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px;">
+                Chaos Level
+              </div>
+              <div class="chaos-bar-wrap chaos-{{bug.chaosClass}}" style="gap:12px;">
+                <div class="chaos-bar" style="height:8px; flex:1;">
+                  <div class="chaos-fill" style="width:{{bug.chaos_level}}%"></div>
+                </div>
+                <span style="font-family:'Space Mono',monospace; font-size:14px; font-weight:700; color:var(--warn);">
+                  {{bug.chaos_level}}%
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🧬 Mutation Log</div>
+          </div>
+          <div style="padding:16px 20px;">
+            {{#each mutations}}
+            <div class="mutation-entry">
+              <span class="mutation-time">[{{timeStr}}]</span>
+              <span class="mutation-msg">{{description}}</span>
+            </div>
+            {{else}}
+            <div class="empty-state" style="padding:24px;">
+              <span class="empty-icon">🧬</span>
+              No mutations yet.
+            </div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        {{#unless (eq bug.status 'fixed')}}
+        {{#unless (eq bug.status 'escaped')}}
+
+        {{#if (eq bug.status 'open')}}
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-header">
+            <div class="card-title">👤 Claim This Bug</div>
+          </div>
+          <div style="padding:16px 20px;">
+            {{#if user}}
+              <p style="font-size:11px; color:var(--text-dim); margin-bottom:12px; line-height:1.8;">
+                Claiming assigns this bug to you. Your sanity will decrease by 5. Are you sure?
+              </p>
+              <form method="POST" action="/notabug/bug/{{bug.id}}/claim">
+                <button type="submit" class="btn btn-claim" style="width:100%; justify-content:center; padding:10px;">
+                  ⚡ Claim Bug as {{user.username}}
+                </button>
+              </form>
+            {{else}}
+              <p style="font-size:11px; color:var(--text-dim); margin-bottom:12px; line-height:1.8;">
+                You must be logged in to claim bugs.
+              </p>
+              <a href="/notabug/login?redirect=/notabug/bug/{{bug.id}}" class="btn btn-claim" style="width:100%; display:flex; justify-content:center; padding:10px; text-decoration:none;">
+                🔓 Login to Claim
+              </a>
+            {{/if}}
+          </div>
+        </div>
+        {{/if}}
+
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-header">
+            <div class="card-title">🔧 Attempt Fix</div>
+          </div>
+          <div style="padding:16px 20px;">
+            {{#if user}}
+              {{#if (eq bug.claimed_by user.username)}}
+                <p style="font-size:11px; color:var(--text-dim); margin-bottom:4px; line-height:1.8;">
+                  Success probability depends on severity. Failure increases chaos. Catastrophic failure spawns new bugs.
+                </p>
+                <div style="display:flex; gap:6px; font-size:10px; color:var(--text-muted); margin-bottom:14px; flex-wrap:wrap;">
+                  <span style="color:var(--low);">low: 80%</span>
+                  <span>|</span>
+                  <span style="color:var(--warn);">medium: 55%</span>
+                  <span>|</span>
+                  <span style="color:var(--high);">high: 35%</span>
+                  <span>|</span>
+                  <span style="color:var(--danger);">critical: 15%</span>
+                </div>
+                <div style="font-size:10px; color:var(--text-muted); margin-bottom:14px;">
+                  Your Sanity: <strong>{{user.sanity}}</strong> | Reputation: <strong>{{user.reputation}}</strong> | Balance: <strong>${{user.balance}}</strong>
+                </div>
+                <form method="POST" action="/notabug/bug/{{bug.id}}/fix">
+                  <button type="submit" class="btn btn-fix" style="width:100%; justify-content:center; padding:10px;">
+                    🔧 Try Fix ({{user.username}})
+                  </button>
+                </form>
+              {{else}}
+                <p style="font-size:11px; color:var(--danger); margin-bottom:12px; line-height:1.8;">
+                  Only the hunter who claimed this bug can attempt to fix it.
+                  {{#if bug.claimed_by}}
+                    Claimed by: <strong>@{{bug.claimed_by}}</strong>
+                  {{/if}}
+                </p>
+              {{/if}}
+            {{else}}
+              <p style="font-size:11px; color:var(--text-dim); margin-bottom:12px; line-height:1.8;">
+                You must be logged in to fix bugs.
+              </p>
+              <a href="/notabug/login?redirect=/notabug/bug/{{bug.id}}" class="btn btn-fix" style="width:100%; display:flex; justify-content:center; padding:10px; text-decoration:none;">
+                🔓 Login to Fix Bug
+              </a>
+            {{/if}}
+          </div>
+        </div>
+
+        {{/unless}}
+        {{/unless}}
+
+        {{#if (eq bug.status 'fixed')}}
+        <div class="card" style="margin-bottom:16px; border-color:rgba(0,255,136,0.2);">
+          <div style="padding:20px; text-align:center;">
+            <div style="font-size:32px; margin-bottom:8px;">✓</div>
+            <div style="font-family:'Syne',sans-serif; font-weight:700; color:var(--success); font-size:16px;">
+              Bug Fixed
+            </div>
+            <div style="font-size:11px; color:var(--text-dim); margin-top:6px;">
+              This bug has been resolved. It may mutate back.
+            </div>
+          </div>
+        </div>
+        {{/if}}
+
+        {{#if (eq bug.status 'escaped')}}
+        <div class="card" style="margin-bottom:16px; border-color:rgba(255,45,45,0.2);">
+          <div style="padding:20px; text-align:center;">
+            <div style="font-size:32px; margin-bottom:8px;">🚨</div>
+            <div style="font-family:'Syne',sans-serif; font-weight:700; color:var(--danger); font-size:16px;">
+              Bug Escaped
+            </div>
+            <div style="font-size:11px; color:var(--text-dim); margin-top:6px;">
+              It's still out there. Affecting things. You just can't see it.
+            </div>
+          </div>
+        </div>
+        {{/if}}
+
+        <div class="card">
+          <div style="padding:16px 20px;">
+            <div class="stat-row">
+              <div class="stat-cell">
+                <div class="stat-cell-label">Severity</div>
+                <div class="stat-cell-val accent">{{bug.severity}}</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-cell-label">Chaos</div>
+                <div class="stat-cell-val warn">{{bug.chaos_level}}%</div>
+              </div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-cell">
+                <div class="stat-cell-label">Bounty</div>
+                <div class="stat-cell-val success">{{bug.bountyFormatted}}</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-cell-label">Status</div>
+                <div class="stat-cell-val accent2">{{bug.status}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var outcome = '{{outcome}}';
+  if (!outcome) {
+    var url = new URL(window.location.href);
+    outcome = url.searchParams.get('outcome');
+    if (outcome) {
+      var overlay = document.getElementById('fix-overlay');
+      if (overlay) overlay.classList.add('show');
+    }
+  }
+})();
+</script>
