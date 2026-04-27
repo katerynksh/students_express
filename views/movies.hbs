@@ -2,25 +2,41 @@
 
 <style>
     :root {
-        --bg-body: #0b0e14;      
-        --bg-card: #151921;      
-        --bg-input: #1c222d;     
-        --text-main: #ffffff;    
-        --text-muted: #718096;   
-        --accent-green: #22c55e; 
-        --accent-blue: #3b82f6;  
-        --accent-red: #ef4444;   
-        --border: #2d3748;       
+        --bg-body: #f4f7f6;
+        --bg-card: #ffffff;
+        --bg-input: #ffffff;
+        --text-main: #1a202c;
+        --text-muted: #718096;
+        --accent-green: #22c55e;
+        --accent-blue: #3b82f6;
+        --accent-red: #ef4444;
+        --border: #e2e8f0;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        --modal-bg: rgba(0, 0, 0, 0.4);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-body: #0b0e14;
+            --bg-card: #151921;
+            --bg-input: #1c222d;
+            --text-main: #ffffff;
+            --text-muted: #718096;
+            --border: #2d3748;
+            --shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            --modal-bg: rgba(0, 0, 0, 0.7);
+        }
     }
 
     body {
         font-family: 'Inter', sans-serif;
         background-color: var(--bg-body);
         color: var(--text-main);
-        padding: 40px 20px 60px;
-        max-width: 1100px;
-        margin: 0 auto;
+        padding: 40px 5%; 
+        min-height: 100vh;
+        margin: 0;
         -webkit-font-smoothing: antialiased;
+        transition: background-color 0.3s, color 0.3s;
     }
 
     .btn-back {
@@ -33,35 +49,156 @@
         font-weight: 700;
         margin-bottom: 30px;
         padding: 10px 18px;
-        background-color: rgba(255, 255, 255, 0.03); 
+        background-color: var(--bg-card);
         border: 1px solid var(--border);
         border-radius: 12px;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow);
     }
 
     .btn-back:hover {
-        background-color: rgba(255, 255, 255, 0.08);
         border-color: var(--text-muted);
         transform: translateX(-4px); 
     }
 
-    h3 {
+    .header-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .header-actions h3 {
         font-size: 32px;
         font-weight: 800;
-        margin-bottom: 30px;
+        margin: 0;
         letter-spacing: -0.02em;
+    }
+
+    .btn-add-primary {
+        background-color: var(--accent-green);
+        color: #052e16;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 800;
+        font-size: 14px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2);
+    }
+
+    .btn-add-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+    }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+        background-color: rgba(100, 116, 139, 0.1);
+        color: #94a3b8;
+        border: 1px solid rgba(100, 116, 139, 0.2);
+    }
+
+    /* Динамічні кольори Жанрів */
+    .badge[data-value="Sci-Fi"] { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); }
+    .badge[data-value="Action"] { background-color: rgba(249, 115, 22, 0.15); color: #fb923c; border-color: rgba(249, 115, 22, 0.3); }
+    .badge[data-value="Drama"] { background-color: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: rgba(168, 85, 247, 0.3); }
+    .badge[data-value="Comedy"] { background-color: rgba(250, 204, 21, 0.15); color: #facc15; border-color: rgba(250, 204, 21, 0.3); }
+    .badge[data-value="Thriller"] { background-color: rgba(239, 68, 68, 0.15); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+    .badge[data-value="Horror"] { background-color: rgba(0, 0, 0, 0.3); color: #9ca3af; border-color: rgba(156, 163, 175, 0.3); }
+    .badge[data-value="Romance"] { background-color: rgba(236, 72, 153, 0.15); color: #f472b6; border-color: rgba(236, 72, 153, 0.3); }
+    .badge[data-value="Fantasy"] { background-color: rgba(139, 92, 246, 0.15); color: #a78bfa; border-color: rgba(139, 92, 246, 0.3); }
+    .badge[data-value="Animation"] { background-color: rgba(20, 184, 166, 0.15); color: #2dd4bf; border-color: rgba(20, 184, 166, 0.3); }
+    .badge[data-value="Mystery"] { background-color: rgba(99, 102, 241, 0.15); color: #818cf8; border-color: rgba(99, 102, 241, 0.3); }
+    .badge[data-value="Crime"] { background-color: rgba(220, 38, 38, 0.15); color: #ef4444; border-color: rgba(220, 38, 38, 0.3); }
+
+    /* Динамічні кольори Статусів */
+    .badge[data-value="Watched"] { background-color: rgba(34, 197, 94, 0.15); color: #4ade80; border-color: rgba(34, 197, 94, 0.3); }
+    .badge[data-value="Plan to Watch"] { background-color: rgba(148, 163, 184, 0.1); color: #94a3b8; border-color: rgba(148, 163, 184, 0.2); }
+
+    /* --- ПОСТЕР ПРИ НАВЕДЕННІ --- */
+    .title-cell { position: relative; cursor: help; }
+    .poster-preview {
+        display: none; position: absolute; left: 50%; bottom: 100%;
+        transform: translateX(-50%); width: 150px; border-radius: 10px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.5); z-index: 100;
+        border: 2px solid var(--border); pointer-events: none;
+    }
+    .title-cell:hover .poster-preview { display: block; }
+
+    /* --- МОДАЛЬНЕ ВІКНО --- */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: var(--modal-bg);
+        backdrop-filter: blur(5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
     }
 
     .form-container {
         background-color: var(--bg-card);
-        padding: 32px;
+        padding: 40px 32px 32px;
         border-radius: 16px; 
-        box-shadow: 0 20px 50px rgba(0,0,0,0.6); 
-        margin-bottom: 50px;
-        width: 340px;
+        box-shadow: var(--shadow);
+        width: 380px; 
         border: 1px solid var(--border);
+        position: relative;
+        transform: translateY(20px) scale(0.95);
+        transition: transform 0.3s ease;
+        max-height: 90vh;
+        overflow-y: auto; 
+    }
+
+    .modal-overlay.active .form-container {
+        transform: translateY(0) scale(1);
+    }
+
+    .btn-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 24px;
+        cursor: pointer;
+        transition: color 0.2s;
+        line-height: 1;
+    }
+    .btn-close:hover { color: var(--accent-red); }
+
+    .form-container h4 {
+        margin-top: 0;
+        margin-bottom: 25px;
+        font-size: 24px;
+        font-weight: 800;
     }
 
     .form-container label {
@@ -75,19 +212,27 @@
         margin-bottom: 8px;
     }
 
-    .form-container input {
+    .form-container input, .form-container select {
         width: 100%;
         padding: 12px 16px;
         background-color: var(--bg-input);
         border: 1px solid var(--border);
         border-radius: 10px;
-        color: white;
+        color: var(--text-main);
         font-size: 15px;
         font-family: inherit;
         box-sizing: border-box; 
     }
 
-    .form-container button {
+    .form-container select {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23718096%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px top 50%;
+        background-size: 10px auto;
+    }
+
+    .form-container button[type="submit"] {
         margin-top: 30px;
         width: 100%;
         padding: 14px;
@@ -101,6 +246,7 @@
         transition: all 0.2s ease;
     }
 
+    
     table {
         width: 100%;
         border-collapse: separate; 
@@ -109,10 +255,18 @@
         border-radius: 16px;
         overflow: hidden; 
         border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+    }
+
+    tbody tr { transition: background-color 0.2s ease; }
+    tbody tr:hover td { background-color: rgba(255, 255, 255, 0.05); }
+
+    @media (prefers-color-scheme: light) {
+        tbody tr:hover td { background-color: rgba(0, 0, 0, 0.04); }
     }
 
     th {
-        background-color: rgba(255, 255, 255, 0.02); 
+        background-color: rgba(0, 0, 0, 0.02); 
         color: var(--text-muted);
         text-transform: uppercase; 
         font-size: 11px;
@@ -122,122 +276,87 @@
         text-align: left;
     }
 
-    th:nth-child(4), td:nth-child(4),
-    th:nth-child(5), td:nth-child(5) {
-        text-align: center;
-    }
+    th:nth-child(4), td:nth-child(4), 
+    th:nth-child(5), td:nth-child(5), 
+    th:nth-child(6), td:nth-child(6), 
+    th:nth-child(7), td:nth-child(7)  { text-align: center; }
+    th:last-child { text-align: center; padding-left: 40px; }
+    td:last-child { text-align: right; width: 1%; white-space: nowrap; padding-right: 20px; }
 
-    th:last-child {
-        text-align: center;
-        padding-left: 40px;
-    }
+    td { padding: 20px; border-bottom: 1px solid var(--border); font-size: 15px; vertical-align: middle; color: var(--text-main); }
 
-    td:last-child {
-        text-align: right;
-        width: 1%;
-        white-space: nowrap;
-        padding-right: 20px;
-    }
-
-    td {
-        padding: 20px;
-        border-bottom: 1px solid var(--border);
-        font-size: 15px;
-        vertical-align: middle;
-    }
-
-    .actions-cell {
-        display: inline-flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 12px;
-    }
+    /* ІДЕАЛЬНЕ ВИРІВНЮВАННЯ КНОПОК */
+    .actions-cell { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+    .actions-cell form { display: flex; align-items: center; margin: 0; padding: 0; height: 36px; }
 
     .btn-edit, .btn-delete {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        height: 36px; 
-        min-width: 80px;
-        padding: 0 16px;
-        border-radius: 8px;
-        font-weight: 800;
-        font-size: 13px;
-        text-decoration: none;
-        border: none;
-        cursor: pointer;
-        box-sizing: border-box;
-        line-height: 1;
-        transition: 0.2s;
-        margin: 0;
+        display: flex; align-items: center; justify-content: center;
+        height: 36px; min-width: 80px; padding: 0 16px; border-radius: 8px;
+        font-weight: 800; font-size: 13px; text-decoration: none; border: none;
+        cursor: pointer; box-sizing: border-box; line-height: 1; transition: 0.2s; margin: 0;
     }
-
-    .btn-edit {
-        background-color: rgba(59, 130, 246, 0.1);
-        color: var(--accent-blue) !important;
-        border: 1px solid rgba(59, 130, 246, 0.2);
-    }
-
+    .btn-edit { background-color: rgba(59, 130, 246, 0.1); color: var(--accent-blue) !important; border: 1px solid rgba(59, 130, 246, 0.2); }
     .btn-edit:hover { background-color: var(--accent-blue); color: white !important; }
-
-    .btn-delete {
-        background-color: rgba(239, 68, 68, 0.1);
-        color: var(--accent-red);
-        border: 1px solid rgba(239, 68, 68, 0.2);
-    }
-
+    .btn-delete { background-color: rgba(239, 68, 68, 0.1); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.2); }
     .btn-delete:hover { background-color: var(--accent-red); color: white; }
 </style>
 
-<a href="/" class="btn-back">←</a>
+<a href="/" class="btn-back">← Back</a>
 
-<h3>Add New Movie</h3>
-
-<div class="form-container">
-    <form action="/movies/create" method="POST">
-        <label>Title</label>
-        <input type="text" name="title" placeholder="e.g. Inception" required>
-        
-        <label>Director</label>
-        <input type="text" name="director" placeholder="Christopher Nolan" required>
-        
-        <label>Year</label>
-        <input type="number" name="release_year" placeholder="2010" required>
-        
-        <label>Rating</label>
-        <input type="number" step="0.1" name="rating" placeholder="8.8" required>
-        
-        <button type="submit">Add to Library</button>
-    </form>
+<div class="header-actions">
+    <h3>My Collection</h3>
+    <button class="btn-add-primary" id="openModalBtn">+ Add New Movie</button>
 </div>
-
-<hr style="border: 0; border-top: 1px solid var(--border); margin: 50px 0;">
-
-<h3>My Collection</h3>
 
 <table>
     <thead>
         <tr>
-            <th style="width: 70px;">ID</th>
+            <th style="width: 60px;">ID</th>
             <th>Title</th>
             <th>Director</th>
-            <th style="width: 90px;">Year</th>
-            <th style="width: 90px;">Rating</th>
-            <th style="width: 200px;">Actions</th>
+            <th>Genre</th>
+            <th>Status</th>
+            <th style="width: 80px;">Year</th>
+            <th style="width: 80px;">Rating</th>
+            <th style="width: 180px;">Actions</th>
         </tr>
     </thead>
     <tbody>
         {{#each movies}}
         <tr>
             <td style="color: var(--text-muted); font-family: monospace;">#{{this.id}}</td>
-            <td style="font-weight: 700; color: white;">{{this.title}}</td>
+            
+            <td class="title-cell">
+                <span style="font-weight: 700;">{{this.title}}</span>
+                {{#if this.poster_url}}
+                <img src="{{this.poster_url}}" class="poster-preview" alt="Poster">
+                {{/if}}
+            </td>
+
             <td>{{this.director}}</td>
+            
+            <td style="text-align: center;">
+                {{#if this.genre}}
+                    <span class="badge" data-value="{{this.genre}}">{{this.genre}}</span>
+                {{else}}
+                    <span style="color: var(--text-muted);">-</span>
+                {{/if}}
+            </td>
+            
+            <td style="text-align: center;">
+                {{#if this.status}}
+                    <span class="badge" data-value="{{this.status}}">{{this.status}}</span>
+                {{else}}
+                    <span style="color: var(--text-muted);">-</span>
+                {{/if}}
+            </td>
+            
             <td>{{this.release_year}}</td>
             <td style="font-weight: 700; color: #fbbf24;">★ {{this.rating}}</td>
             <td>
                 <div class="actions-cell">
                     <a href="/movies/edit/{{this.id}}" class="btn-edit">Edit</a>
-                    <form action="/movies/delete/{{this.id}}" method="POST" style="margin: 0; display: flex;">
+                    <form action="/movies/delete/{{this.id}}" method="POST">
                         <button type="submit" class="btn-delete">Delete</button>
                     </form>
                 </div>
@@ -246,3 +365,81 @@
         {{/each}}
     </tbody>
 </table>
+
+<div class="modal-overlay" id="movieModal">
+    <div class="form-container">
+        <button class="btn-close" id="closeModalBtn">&times;</button>
+        <h4>Add New Movie</h4>
+        
+        <form action="/movies/create" method="POST">
+            <label>Title</label>
+            <input type="text" name="title" placeholder="e.g. Inception" required>
+            
+            <label>Director</label>
+            <input type="text" name="director" placeholder="Christopher Nolan" required>
+
+            <label>Poster URL</label>
+            <input type="url" name="poster_url" placeholder="https://link-to-image.jpg">
+            
+            <label>Genre</label>
+            <select name="genre" required>
+                <option value="" disabled selected hidden>Select Genre</option>
+                <option value="Action">Action</option>
+                <option value="Sci-Fi">Sci-Fi</option>
+                <option value="Drama">Drama</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Thriller">Thriller</option>
+                <option value="Horror">Horror</option>
+                <option value="Romance">Romance</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Animation">Animation</option>
+                <option value="Mystery">Mystery</option>
+                <option value="Crime">Crime</option>
+            </select>
+
+           <label>Status</label>
+           <select name="status" required>
+                <option value="" disabled selected hidden>Select Status</option>
+                <option value="Watched">Watched</option>
+                <option value="Plan to Watch">Plan to Watch</option>
+            </select>
+
+            <label>Year</label>
+            <input type="number" name="release_year" placeholder="2010" required>
+            
+            <label>Rating</label>
+            <input type="number" step="0.1" name="rating" placeholder="8.8" required>
+            
+            <button type="submit">Add to Library</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById('movieModal');
+    const btnOpen = document.getElementById('openModalBtn');
+    const btnClose = document.getElementById('closeModalBtn');
+
+
+    btnOpen.addEventListener('click', () => {
+        modal.classList.add('active');
+    });
+
+
+    btnClose.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+
+
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.classList.remove('active');
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modal.classList.contains('active')) {
+            modal.classList.remove('active');
+        }
+    });
+</script>

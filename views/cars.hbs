@@ -1,16 +1,80 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <title>Управління автомобілями</title>
     <style>
+
+        :root {
+           
+            --text-main: #f0f4f8;
+            --text-label: #e2e8f0;
+            --text-muted: #9fb3c8;
+            --bg-card: rgba(15, 23, 42, 0.85);
+            --input-bg: #1e293b;
+            --input-border: #334155;
+            --input-focus: #0f172a;
+            --input-text: #ffffff;
+            --divider: rgba(51, 65, 85, 0.8);
+            --title-color: #ffffff;
+            --title-shadow-1: rgba(56, 189, 248, 0.3); 
+            --title-shadow-2: rgba(0, 0, 0, 0.9);
+            --btn-back-bg: #334155;
+            --btn-back-text: #e2e8f0;
+            --btn-controls-bg: rgba(30, 41, 59, 0.8);
+            --bg-overlay: rgba(15, 23, 42, 0.4); 
+        }
+
+        [data-theme="light"] {+
+            --text-main: #1e293b;
+            --text-label: #334155;
+            --text-muted: #64748b;
+            --bg-card: rgba(255, 255, 255, 0.85); 
+            --input-bg: #f8fafc;
+            --input-border: #cbd5e1;
+            --input-focus: #ffffff;
+            --input-text: #0f172a;
+            --divider: rgba(203, 213, 224, 0.8);
+            --title-color: #0f172a;
+            --title-shadow-1: rgba(255, 255, 255, 0.8);
+            --title-shadow-2: rgba(0, 0, 0, 0.1);
+            --btn-back-bg: #e2e8f0;
+            --btn-back-text: #1e293b;
+            --btn-controls-bg: rgba(255, 255, 255, 0.9);
+            --bg-overlay: rgba(255, 255, 255, 0.1); 
+        }
+
         html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             min-height: 100%;
             font-family: Arial, sans-serif;
-            color: #e2e8f0;
+            color: var(--text-main);
+            transition: color 0.3s ease;
+        }
+
+     
+        #bg-image {
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0;
+            background-image: url('background.png'); 
+            background-size: cover;
+            background-position: center;
+            z-index: -100;
+        }
+
+        #bg-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -90; 
+            background: var(--bg-overlay);
+            pointer-events: none; 
+            transition: background 0.4s ease;
+            backdrop-filter: blur(1px); 
         }
 
         .main-title {
@@ -18,25 +82,13 @@
             font-style: italic;
             text-align: center;
             font-size: 56px; 
-            color: #ffffff;
+            color: var(--title-color);
             margin-top: 10px;
             margin-bottom: 35px;
             letter-spacing: 4px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 
-                         0 5px 15px rgba(0, 0, 0, 0.9); 
-        }
-
-        #bg-video {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            z-index: -100;
-            transform: translate(-50%, -50%);
-            object-fit: cover;
+            text-shadow: 0 0 10px var(--title-shadow-1), 
+                         0 5px 15px var(--title-shadow-2); 
+            transition: color 0.3s ease, text-shadow 0.3s ease;
         }
 
         .wrapper {
@@ -45,34 +97,50 @@
             padding: 20px;
         }
 
-        h2 { color: #ffffff; border-bottom: 2px solid rgba(74, 85, 104, 0.8); padding-bottom: 10px; }
+        h2 { 
+            color: var(--title-color); 
+            border-bottom: 2px solid var(--divider); 
+            padding-bottom: 10px; 
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .section-title {
+            background: var(--bg-card);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            transition: background 0.3s ease;
+        }
+
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #cbd5e0; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-label); transition: color 0.3s ease; }
 
         .form-group input { 
             width: 100%; padding: 10px; box-sizing: border-box; 
-            background-color: #2d3748; 
-            border: 1px solid #4a5568; 
-            color: #ffffff; 
-            border-radius: 4px; transition: border-color 0.2s;
+            background-color: var(--input-bg); 
+            border: 1px solid var(--input-border); 
+            color: var(--input-text); 
+            border-radius: 4px; transition: background-color 0.3s, border-color 0.3s, color 0.3s;
         }
-        .form-group input:focus { outline: none; border-color: #63b3ed; background-color: #1a202c; }
-        .form-group input::placeholder { color: #718096; }
+        .form-group input:focus { outline: none; border-color: #38bdf8; background-color: var(--input-focus); }
+        .form-group input::placeholder { color: var(--text-muted); }
 
         .card { 
-            background: rgba(26, 32, 44, 0.75); 
-            backdrop-filter: blur(8px);
+            background: var(--bg-card); 
+            backdrop-filter: blur(12px);
             padding: 20px; border-radius: 8px; margin-bottom: 40px; 
-            border: 1px solid rgba(74, 85, 104, 0.5); 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3); 
+            border: 1px solid var(--divider); 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3); 
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .car-item { 
-            background: rgba(26, 32, 44, 0.75); 
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(74, 85, 104, 0.5); 
+            background: var(--bg-card); 
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--divider); 
             padding: 15px; margin-bottom: 15px; border-radius: 5px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         @font-face {
@@ -87,9 +155,10 @@
             font-style: italic;
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
+            text-shadow: 2px 2px 4px var(--title-shadow-1); 
         } 
         
+  
         .btn { 
             font-family: 'Sofachrome', sans-serif;
             font-style: italic;
@@ -104,42 +173,97 @@
             margin-right: 5px; 
             text-decoration: none; 
             display: inline-block; 
-            transition: background-color 0.2s, transform 0.1s;
+            transition: background-color 0.3s ease, transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active { 
+            transform: translateY(1px); 
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
         
-        .btn-video {
+        .controls-container {
             position: fixed; 
             top: 20px;
             right: 20px;
-            background-color: rgba(45, 55, 72, 0.8); 
-            border: 1px solid rgba(113, 128, 150, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             z-index: 1000; 
+        }
+
+        .btn-control {
+            background-color: var(--btn-controls-bg); 
+            color: var(--text-main) !important;
+            border: 1px solid var(--divider);
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             backdrop-filter: blur(4px); 
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Sofachrome', sans-serif;
+            font-size: 10px;
+            text-transform: uppercase;
+            transition: background-color 0.3s, color 0.3s, transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.2s ease;
         }
         
-        .btn-video:hover { background-color: rgba(74, 85, 104, 0.9); }
-        .btn:active { transform: translateY(2px); }
-
-        .btn-submit { background-color: #567e69; width: 100%; margin-top: 10px; }
-        .btn-submit:hover { background-color: #41604f; }
+        .btn-control:hover { 
+            background-color: var(--bg-card); 
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
         
-        .btn-edit { background-color: #a37d60; }
-        .btn-edit:hover { background-color: #8c6c53; }
+        .btn-control:active {
+            transform: translateY(1px) scale(0.98);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+        }
 
-        .btn-delete { background-color: #a07171; }
-        .btn-delete:hover { background-color: #865e5e; }
 
-        .btn-back { background-color: #2d3748; color: #cbd5e0 !important; margin-bottom: 20px; }
-        .btn-back:hover { background-color: #364251; }
+        .btn-submit { background-color: #0284c7; width: 100%; margin-top: 10px; } 
+        .btn-submit:hover { background-color: #0369a1; }
+        
+        .btn-edit { background-color: #64748b; }
+        .btn-edit:hover { background-color: #475569; }
+
+        .btn-delete { background-color: #ef4444; }
+        .btn-delete:hover { background-color: #dc2626; }
+
+        .btn-back { 
+            background-color: var(--btn-back-bg); 
+            color: var(--btn-back-text) !important; 
+            margin-bottom: 20px; 
+            transition: background-color 0.3s, color 0.3s, transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.2s ease;
+        }
+        .btn-back:hover { background-color: var(--text-muted); color: white !important; }
+
+        hr {
+            border-top: 2px solid var(--divider);
+            border-bottom: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .empty-message {
+            color: var(--text-label); 
+            font-style: italic; 
+            background: var(--bg-card); 
+            padding: 15px; 
+            border-radius: 5px;
+            transition: background 0.3s, color 0.3s;
+        }
     </style>
 </head>
 <body>
-    <video autoplay loop muted playsinline id="bg-video">
-        <source src="/background.mp4" type="video/mp4">
-    </video>
+    
+    <div id="bg-image"></div>
+    <div id="bg-overlay"></div>
 
-    <button id="toggle-video-btn" class="btn btn-video">PAUSE BACKGROUND</button>
+    <div class="controls-container">
+        <button id="toggle-theme-btn" class="btn-control">LIGHT THEME</button>
+    </div>
     
     <div class="wrapper">
 
@@ -149,9 +273,9 @@
 
         {{#if editingCar}}
             <a href="/cars" class="btn btn-back">⬅ Скасувати редагування</a>
-            <h2 style="background: rgba(26, 32, 44, 0.75); padding: 10px; border-radius: 5px;">Редагувати автомобіль: {{editingCar.car_brand}} {{editingCar.car_model}}</h2>
+            <h2 class="section-title">Редагувати автомобіль: {{editingCar.car_brand}} {{editingCar.car_model}}</h2>
         {{else}}
-            <h2 style="background: rgba(26, 32, 44, 0.75); padding: 10px; border-radius: 5px;">Додати новий автомобіль</h2>
+            <h2 class="section-title">Додати новий автомобіль</h2>
         {{/if}}
 
         <div class="card">
@@ -203,17 +327,17 @@
             </form>
         </div>
 
-        <hr style="border-top: 2px solid rgba(74, 85, 104, 0.8); border-bottom: none;">
+        <hr>
 
-        <h2 style="background: rgba(26, 32, 44, 0.75); padding: 10px; border-radius: 5px;">Список автомобілів в базі</h2>
+        <h2 class="section-title">Список автомобілів в базі</h2>
 
         <div id="cars-list">
             {{#each cars}}
                 <div class="car-item" id="car-{{this.id}}">
-                    <h3 style="margin-top: 0; color: #ffffff;">{{this.car_brand}} {{this.car_model}}</h3>
+                    <h3 style="margin-top: 0; color: var(--title-color);">{{this.car_brand}} {{this.car_model}}</h3>
                     
                     {{#if this.image_url}}
-                        <img src="{{this.image_url}}" alt="Фото {{this.car_brand}}" style="width: 100%; height: 250px; object-fit: cover; border-radius: 5px; margin-bottom: 15px; border: 1px solid #4a5568;">
+                        <img src="{{this.image_url}}" alt="Фото {{this.car_brand}}" style="width: 100%; height: 250px; object-fit: cover; border-radius: 5px; margin-bottom: 15px; border: 1px solid var(--input-border);">
                     {{/if}}
 
                     <p>
@@ -223,13 +347,13 @@
                         <strong>Розгін 0-100:</strong> {{this.acceleration_0_to_100}} с <br>
                         <strong>Ціна:</strong> ${{this.price}}
                     </p>
-                    <p><small style="color: #718096;">Додано: {{this.created_at_date}} о {{this.created_at_time}}</small></p>
+                    <p><small style="color: var(--text-muted);">Додано: {{this.created_at_date}} о {{this.created_at_time}}</small></p>
                     
                     <a href="/cars/edit/{{this.id}}" class="btn btn-edit">Редагувати</a>
                     <button class="btn btn-delete delete-btn" data-id="{{this.id}}">Видалити</button>
                 </div>
             {{else}}
-                <p style="color: #cbd5e0; font-style: italic; background: rgba(26, 32, 44, 0.75); padding: 15px; border-radius: 5px;">У базі поки що немає жодного автомобіля. Додайте перший!</p>
+                <p class="empty-message">У базі поки що немає жодного автомобіля. Додайте перший!</p>
             {{/each}}
         </div>
 
@@ -237,24 +361,23 @@
 
     <script>
 
-        const bgVideo = document.getElementById('bg-video');
-        const videoBtn = document.getElementById('toggle-video-btn');
+        const themeBtn = document.getElementById('toggle-theme-btn');
+        const currentTheme = localStorage.getItem('theme') || 'dark';
 
-        if (videoBtn && bgVideo) {
-            videoBtn.addEventListener('click', () => {
-                if (bgVideo.paused) {
-                    bgVideo.play();
-                    videoBtn.textContent = 'PAUSE BACKGROUND';
-                    videoBtn.style.color = 'white';
-                } else {
-                    bgVideo.pause();
-                    videoBtn.textContent = 'PLAY BACKGROUND';
-                    videoBtn.style.color = '#fc8181';
-                }
-            });
-        }
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeBtn.textContent = currentTheme === 'dark' ? 'LIGHT THEME' : 'DARK THEME';
 
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const targetTheme = current === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('theme', targetTheme);
+            
+            themeBtn.textContent = targetTheme === 'dark' ? 'LIGHT THEME' : 'DARK THEME';
+        });
 
+   
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', async (event) => {
                 const carId = event.target.getAttribute('data-id');
