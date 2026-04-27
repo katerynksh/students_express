@@ -20,7 +20,10 @@ router.get("/add", (req, res) => {
 
 router.post("/add", async (req, res) => {
   try {
-    const { hero_name, hero_class, hero_role, attack_type } = req.body;
+    let { hero_name, hero_class, hero_role, attack_type } = req.body;
+
+    hero_class = hero_class?.toLowerCase() || "";
+    attack_type = attack_type?.toLowerCase() || "";
 
     if (!hero_name) {
     return res.status(400).send("Ім'я героя не може бути пустим рядком");
@@ -76,7 +79,10 @@ router.get("/edit/:id", async (req, res) => {
 router.post("/update/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { hero_name, hero_class, hero_role, attack_type } = req.body;
+    let { hero_name, hero_class, hero_role, attack_type } = req.body;
+
+    hero_class = hero_class?.toLowerCase() || "";
+    attack_type = attack_type?.toLowerCase() || "";
     
 if (!hero_name) {
     return res.status(400).send("Ім'я героя не може бути пустим рядком");
